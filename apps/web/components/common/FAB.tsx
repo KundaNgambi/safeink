@@ -23,8 +23,8 @@ export default function FAB() {
       }}
     >
       <span
-        className="text-2xl font-bold"
-        style={{ color: isDark ? '#0D1B2A' : '#FFFFFF' }}
+        className="text-2xl font-bold leading-none"
+        style={{ color: isDark ? '#0D1B2A' : '#FFFFFF', marginTop: 1 }}
       >
         +
       </span>
