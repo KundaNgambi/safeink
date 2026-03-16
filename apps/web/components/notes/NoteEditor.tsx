@@ -51,7 +51,11 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
 
   const handleSave = () => {
     if (!title.trim()) return;
-    onSave(title.trim(), body, categoryId);
+    // Validate category exists to prevent FK constraint violation
+    const validCategoryId = categoryId && categories.some((c) => c.id === categoryId)
+      ? categoryId
+      : null;
+    onSave(title.trim(), body, validCategoryId);
   };
 
   const bgColor = isDark ? '#1B263B' : '#E0E1DD';

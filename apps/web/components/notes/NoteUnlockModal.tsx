@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useAppStore } from '@/store';
 import { useAuthStore } from '@/store/auth';
 import { createClient } from '@/lib/supabase/client';
-import { Lock } from 'lucide-react';
+import { Lock, Eye, EyeOff } from 'lucide-react';
 
 interface NoteUnlockModalProps {
   onUnlock: () => void;
@@ -17,6 +17,7 @@ export default function NoteUnlockModal({ onUnlock, onClose }: NoteUnlockModalPr
   const isDark = theme === 'dark';
 
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [attempts, setAttempts] = useState(0);
@@ -111,21 +112,35 @@ export default function NoteUnlockModal({ onUnlock, onClose }: NoteUnlockModalPr
           Enter your password to view this note
         </p>
 
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleUnlock()}
-          placeholder="Password"
-          className="w-full px-4 py-3 rounded-xl text-sm outline-none mb-3"
-          style={{
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            backgroundColor: inputBg,
-            border: `1.5px solid ${error ? '#C45C6A' : borderColor}`,
-            color: primaryText,
-          }}
-          autoFocus
-        />
+        <div className="w-full relative mb-3">
+          <input
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleUnlock()}
+            placeholder="Password"
+            className="w-full px-4 py-3 pr-11 rounded-xl text-sm outline-none"
+            style={{
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              backgroundColor: inputBg,
+              border: `1.5px solid ${error ? '#C45C6A' : borderColor}`,
+              color: primaryText,
+            }}
+            autoFocus
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2"
+            style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}
+          >
+            {showPassword ? (
+              <EyeOff size={16} strokeWidth={1.5} style={{ color: secondaryText }} />
+            ) : (
+              <Eye size={16} strokeWidth={1.5} style={{ color: secondaryText }} />
+            )}
+          </button>
+        </div>
 
         {error && (
           <p

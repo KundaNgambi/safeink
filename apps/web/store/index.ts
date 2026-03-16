@@ -235,9 +235,12 @@ export const useAppStore = create<AppState>((set, get) => ({
   searchQuery: '',
   setSearchQuery: (query) => set({ searchQuery: query }),
 
-  // Auto-lock
-  isLocked: false,
-  setLocked: (locked) => set({ isLocked: locked }),
+  // Auto-lock — persist in sessionStorage so refresh doesn't bypass
+  isLocked: typeof window !== 'undefined' ? sessionStorage.getItem('obscura_locked') === 'true' : false,
+  setLocked: (locked) => {
+    if (typeof window !== 'undefined') sessionStorage.setItem('obscura_locked', String(locked));
+    set({ isLocked: locked });
+  },
   autoLockEnabled: typeof window !== 'undefined' ? localStorage.getItem('auto_lock_enabled') !== 'false' : true,
   setAutoLockEnabled: (enabled) => {
     if (typeof window !== 'undefined') localStorage.setItem('auto_lock_enabled', String(enabled));
