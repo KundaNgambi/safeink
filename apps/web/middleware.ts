@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
+
+// Public routes that don't require authentication
+const PUBLIC_ROUTES = ['/login', '/signup', '/mfa', '/auth/callback'];
 
 // Rate limiting state (in production, use Upstash Redis)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -22,8 +26,86 @@ function getRateLimit(pathname: string) {
   return RATE_LIMITS.default;
 }
 
-export function middleware(request: NextRequest) {
-  const response = NextResponse.next();
+export async function middleware(request: NextRequest) {
+  let response = NextResponse.next({
+    request: { headers: request.headers },
+  });
+
+  // Auth guard — check session for protected routes
+  const { pathname } = request.nextUrl;
+  const isPublicRoute = PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
+  const isStaticOrApi = pathname.startsWith('/api') || pathname.startsWith('/_next');
+
+  if (!isPublicRoute && !isStaticOrApi) {
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return request.cookies.get(name)?.value;
+          },
+          set(name: string, value: string, options: CookieOptions) {
+            request.cookies.set({ name, value, ...options });
+            response = NextResponse.next({
+              request: { headers: request.headers },
+            });
+            response.cookies.set({ name, value, ...options });
+          },
+          remove(name: string, options: CookieOptions) {
+            request.cookies.set({ name, value: '', ...options });
+            response = NextResponse.next({
+              request: { headers: request.headers },
+            });
+            response.cookies.set({ name, value: '', ...options });
+          },
+        },
+      }
+    );
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('next', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
+  // Redirect authenticated users away from auth pages
+  if (isPublicRoute && pathname !== '/auth/callback') {
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return request.cookies.get(name)?.value;
+          },
+          set(name: string, value: string, options: CookieOptions) {
+            request.cookies.set({ name, value, ...options });
+            response = NextResponse.next({
+              request: { headers: request.headers },
+            });
+            response.cookies.set({ name, value, ...options });
+          },
+          remove(name: string, options: CookieOptions) {
+            request.cookies.set({ name, value: '', ...options });
+            response = NextResponse.next({
+              request: { headers: request.headers },
+            });
+            response.cookies.set({ name, value: '', ...options });
+          },
+        },
+      }
+    );
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (user && pathname !== '/mfa') {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+  }
 
   // Security headers
   response.headers.set('X-Content-Type-Options', 'nosniff');

@@ -1,7 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Logo from '@/components/common/Logo';
+import { useAuthStore } from '@/store/auth';
+import { signupSchema } from '@safeink/shared';
 
 export default function SignupPage() {
   const [fullName, setFullName] = useState('');
@@ -10,6 +13,9 @@ export default function SignupPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const router = useRouter();
+  const { signUp } = useAuthStore();
 
   const passwordChecks = [
     { label: '12+ characters', pass: password.length >= 12 },
@@ -24,13 +30,35 @@ export default function SignupPage() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!allValid) return;
-    setLoading(true);
     setError('');
+    setSuccess('');
 
-    setTimeout(() => {
-      window.location.href = '/mfa';
+    const validation = signupSchema.safeParse({ email, password, confirmPassword, fullName });
+    if (!validation.success) {
+      setError(validation.error.issues[0].message);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error: authError, needsEmailConfirmation } = await signUp(email, password, fullName);
+
+      if (authError) {
+        setError(authError.message);
+        return;
+      }
+
+      if (needsEmailConfirmation) {
+        setSuccess('Check your email for a confirmation link.');
+        return;
+      }
+
+      router.push('/');
+    } catch {
+      setError('An unexpected error occurred');
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -86,6 +114,12 @@ export default function SignupPage() {
           {error && (
             <p className="text-xs text-center" style={{ color: '#FF6B6B', fontFamily: 'var(--font-manrope)' }}>
               {error}
+            </p>
+          )}
+
+          {success && (
+            <p className="text-xs text-center" style={{ color: '#BEFF46', fontFamily: 'var(--font-manrope)' }}>
+              {success}
             </p>
           )}
 

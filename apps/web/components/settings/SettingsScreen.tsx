@@ -1,15 +1,21 @@
 'use client';
 
 import { useAppStore } from '@/store';
+import { useAuthStore } from '@/store/auth';
 import Logo from '@/components/common/Logo';
 
 export default function SettingsScreen() {
   const { theme, toggleTheme } = useAppStore();
+  const { user, signOut } = useAuthStore();
   const isDark = theme === 'dark';
   const accent = isDark ? '#BEFF46' : '#4CAF50';
   const accentDark = isDark ? '#9BD42A' : '#388E3C';
 
-  const securityScore = 98;
+  // Calculate real security score based on what's actually implemented
+  const hasE2EE = !!sessionStorage.getItem('safeink_enc_key');
+  const hasMfa = false; // Would need to check MFA factors
+  const hasRls = true; // DB-level, always on
+  const securityScore = [hasE2EE, hasMfa, hasRls].filter(Boolean).length * 33 + 1;
 
   const generalItems = [
     { icon: '🌐', label: 'Language', value: 'English', chevron: true },
@@ -20,12 +26,12 @@ export default function SettingsScreen() {
   ];
 
   const securityFeatures = [
-    { icon: '🔐', title: 'End-to-End Encryption', status: 'Active', active: true },
-    { icon: '🛡️', title: 'Two-Factor Authentication', status: 'Enabled', active: true },
-    { icon: '🔑', title: 'Biometric Unlock', status: 'Available', active: true },
-    { icon: '📋', title: 'Clipboard Protection', status: 'Active', active: true },
-    { icon: '📸', title: 'Screenshot Prevention', status: 'Active', active: true },
-    { icon: '🔄', title: 'Auto-Lock', status: '5 minutes', active: true },
+    { icon: '🔐', title: 'End-to-End Encryption', status: hasE2EE ? 'Active' : 'Not Set Up', active: hasE2EE },
+    { icon: '🛡️', title: 'Two-Factor Authentication', status: hasMfa ? 'Enabled' : 'Not Enabled', active: hasMfa },
+    { icon: '🔒', title: 'Row-Level Security', status: 'Active', active: hasRls },
+    { icon: '🔑', title: 'Biometric Unlock', status: 'Not Available', active: false },
+    { icon: '📋', title: 'Clipboard Protection', status: 'Not Available', active: false },
+    { icon: '🔄', title: 'Auto-Lock', status: 'Not Available', active: false },
   ];
 
   return (
@@ -62,20 +68,20 @@ export default function SettingsScreen() {
               fontFamily: 'var(--font-bricolage)',
             }}
           >
-            U
+            {(user?.user_metadata?.full_name || user?.email || 'U')[0].toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
             <h2
               className="text-base font-bold truncate"
               style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#f0f1f4' : '#1a1c24' }}
             >
-              Demo User
+              {user?.user_metadata?.full_name || 'User'}
             </h2>
             <p
               className="text-xs truncate"
               style={{ fontFamily: 'var(--font-manrope)', color: isDark ? '#8b8fa3' : '#6b7080' }}
             >
-              user@safeink.app
+              {user?.email || 'Not signed in'}
             </p>
             <span
               className="inline-block mt-1 px-2 py-0.5 rounded-md text-[10px] font-bold"
@@ -185,7 +191,7 @@ export default function SettingsScreen() {
               className="text-[10px] font-body mt-1"
               style={{ color: isDark ? '#0f1117' : '#ffffff', fontFamily: 'var(--font-manrope)', opacity: 0.7 }}
             >
-              Excellent — All security features active
+              {securityScore >= 80 ? 'Excellent' : securityScore >= 50 ? 'Good' : 'Needs Improvement'} — {securityScore >= 80 ? 'Core security features active' : 'Enable more security features'}
             </p>
           </div>
         </div>
@@ -231,8 +237,8 @@ export default function SettingsScreen() {
               <span
                 className="text-[10px] font-body font-semibold px-2 py-1 rounded-md"
                 style={{
-                  backgroundColor: `${accent}14`,
-                  color: accent,
+                  backgroundColor: feat.active ? `${accent}14` : 'rgba(255,107,107,0.1)',
+                  color: feat.active ? accent : '#FF6B6B',
                   fontFamily: 'var(--font-manrope)',
                 }}
               >
@@ -241,6 +247,21 @@ export default function SettingsScreen() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Sign out */}
+      <div className="px-5 mb-5">
+        <button
+          onClick={() => signOut().then(() => { window.location.href = '/login'; })}
+          className="w-full py-3.5 rounded-2xl text-sm font-bold transition-all hover:bg-red-500/10"
+          style={{
+            border: '1px solid rgba(255,107,107,0.3)',
+            color: '#FF6B6B',
+            fontFamily: 'var(--font-manrope)',
+          }}
+        >
+          Sign Out
+        </button>
       </div>
 
       {/* App info */}

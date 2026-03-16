@@ -1,28 +1,58 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Logo from '@/components/common/Logo';
+import { useAuthStore } from '@/store/auth';
+import { signinSchema } from '@safeink/shared';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const router = useRouter();
+  const { signIn, signInWithOAuth } = useAuthStore();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      setError('Please fill in all fields');
-      return;
-    }
-    setLoading(true);
     setError('');
 
-    // Demo: redirect to app
-    setTimeout(() => {
-      window.location.href = '/';
+    const validation = signinSchema.safeParse({ email, password });
+    if (!validation.success) {
+      setError(validation.error.issues[0].message);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error: authError, mfaRequired } = await signIn(email, password);
+
+      if (authError) {
+        setError(authError.message === 'Invalid login credentials'
+          ? 'Invalid email or password'
+          : authError.message);
+        return;
+      }
+
+      if (mfaRequired) {
+        router.push('/mfa');
+        return;
+      }
+
+      router.push('/');
+    } catch {
+      setError('An unexpected error occurred');
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
+  };
+
+  const handleOAuth = async (provider: 'google' | 'apple' | 'azure') => {
+    const { error: authError } = await signInWithOAuth(provider);
+    if (authError) {
+      setError(authError.message);
+    }
   };
 
   return (
@@ -125,9 +155,14 @@ export default function LoginPage() {
 
         {/* OAuth */}
         <div className="flex gap-3">
-          {['Google', 'Apple', 'Microsoft'].map((provider) => (
+          {([
+            { label: 'Google', provider: 'google' as const },
+            { label: 'Apple', provider: 'apple' as const },
+            { label: 'Microsoft', provider: 'azure' as const },
+          ]).map(({ label, provider }) => (
             <button
-              key={provider}
+              key={label}
+              onClick={() => handleOAuth(provider)}
               className="flex-1 py-3 rounded-xl text-xs font-semibold transition-all hover:bg-white/5"
               style={{
                 border: '1px solid rgba(255,255,255,0.1)',
@@ -135,7 +170,7 @@ export default function LoginPage() {
                 fontFamily: 'var(--font-manrope)',
               }}
             >
-              {provider}
+              {label}
             </button>
           ))}
         </div>

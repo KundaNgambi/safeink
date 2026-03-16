@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import AuthProvider from '@/components/providers/AuthProvider';
 
 export const metadata: Metadata = {
   title: 'Safeink — Your thoughts, encrypted.',
@@ -21,7 +22,9 @@ export default function RootLayout({
         />
       </head>
       <body className="dark" suppressHydrationWarning>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

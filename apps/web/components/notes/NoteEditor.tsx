@@ -6,7 +6,7 @@ import type { NoteDecrypted } from '@safeink/shared';
 
 interface NoteEditorProps {
   note?: NoteDecrypted;
-  onSave: (title: string, body: string, categoryId: string | null) => void;
+  onSave: (title: string, body: string, categoryId: string | null) => void | Promise<void>;
   onClose: () => void;
 }
 

@@ -1,12 +1,27 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Logo from '@/components/common/Logo';
+import { useAuthStore } from '@/store/auth';
 
 export default function MFAPage() {
   const [code, setCode] = useState(['', '', '', '', '', '']);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [factorId, setFactorId] = useState<string | null>(null);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const router = useRouter();
+  const { verifyMfa, getMfaFactors } = useAuthStore();
+
+  useEffect(() => {
+    getMfaFactors().then(({ totp }) => {
+      const verified = totp.find((f) => f.status === 'verified');
+      if (verified) {
+        setFactorId(verified.id);
+      }
+    });
+  }, [getMfaFactors]);
 
   const handleChange = (index: number, value: string) => {
     if (!/^\d*$/.test(value)) return;
@@ -27,13 +42,27 @@ export default function MFAPage() {
 
   const isComplete = code.every((d) => d !== '');
 
-  const handleVerify = () => {
-    if (!isComplete) return;
+  const handleVerify = async () => {
+    if (!isComplete || !factorId) return;
     setLoading(true);
-    setTimeout(() => {
-      window.location.href = '/';
+    setError('');
+
+    try {
+      const { error: mfaError } = await verifyMfa(factorId, code.join(''));
+
+      if (mfaError) {
+        setError('Invalid code. Please try again.');
+        setCode(['', '', '', '', '', '']);
+        inputRefs.current[0]?.focus();
+        return;
+      }
+
+      router.push('/');
+    } catch {
+      setError('Verification failed');
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -82,9 +111,15 @@ export default function MFAPage() {
           ))}
         </div>
 
+        {error && (
+          <p className="text-xs text-center mb-4" style={{ color: '#FF6B6B', fontFamily: 'var(--font-manrope)' }}>
+            {error}
+          </p>
+        )}
+
         <button
           onClick={handleVerify}
-          disabled={!isComplete || loading}
+          disabled={!isComplete || loading || !factorId}
           className="w-full py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-[1.02] active:scale-[0.98]"
           style={{
             background: isComplete ? 'linear-gradient(135deg, #BEFF46, #9BD42A)' : 'rgba(190,255,70,0.2)',
