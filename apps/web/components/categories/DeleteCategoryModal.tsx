@@ -45,10 +45,10 @@ export default function DeleteCategoryModal({ isOpen, onClose, category, onConfi
         >
           <span className="text-lg">⚠️</span>
           <div>
-            <p className="text-sm font-body font-semibold mb-1" style={{ color: isDark ? '#FF6B6B' : '#EF5350', fontFamily: 'var(--font-manrope)' }}>
+            <p className="text-sm font-body font-semibold mb-1" style={{ color: isDark ? '#FF6B6B' : '#EF5350', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
               Are you sure?
             </p>
-            <p className="text-xs font-body" style={{ color: isDark ? '#8b8fa3' : '#6b7080', fontFamily: 'var(--font-manrope)' }}>
+            <p className="text-xs font-body" style={{ color: isDark ? '#8b8fa3' : '#6b7080', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
               This will delete <strong>{category.icon} {category.name}</strong>
               {subcategories.length > 0 && ` and ${subcategories.length} subcategories`}.
               {affectedNotes.length > 0 && ` ${affectedNotes.length} notes will be reassigned.`}
@@ -61,7 +61,7 @@ export default function DeleteCategoryModal({ isOpen, onClose, category, onConfi
           <div>
             <label
               className="block text-xs font-body font-semibold mb-2 uppercase tracking-wider"
-              style={{ color: isDark ? '#8b8fa3' : '#6b7080', fontFamily: 'var(--font-manrope)' }}
+              style={{ color: isDark ? '#8b8fa3' : '#6b7080', fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
               Move {affectedNotes.length} notes to:
             </label>
@@ -80,7 +80,7 @@ export default function DeleteCategoryModal({ isOpen, onClose, category, onConfi
                 }}
               >
                 <span className="text-sm">📝</span>
-                <span className="text-sm font-body" style={{ color: isDark ? '#f0f1f4' : '#1a1c24', fontFamily: 'var(--font-manrope)' }}>
+                <span className="text-sm font-body" style={{ color: isDark ? '#f0f1f4' : '#1a1c24', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                   Uncategorized
                 </span>
                 {reassignTo === null && (
@@ -116,7 +116,7 @@ export default function DeleteCategoryModal({ isOpen, onClose, category, onConfi
                     >
                       {cat.icon}
                     </span>
-                    <span className="text-sm font-body" style={{ color: isDark ? '#f0f1f4' : '#1a1c24', fontFamily: 'var(--font-manrope)' }}>
+                    <span className="text-sm font-body" style={{ color: isDark ? '#f0f1f4' : '#1a1c24', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                       {cat.name}
                     </span>
                     {reassignTo === cat.id && (
@@ -137,7 +137,7 @@ export default function DeleteCategoryModal({ isOpen, onClose, category, onConfi
             style={{
               backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
               color: isDark ? '#f0f1f4' : '#1a1c24',
-              fontFamily: 'var(--font-manrope)',
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
             }}
           >
             Cancel
@@ -148,7 +148,7 @@ export default function DeleteCategoryModal({ isOpen, onClose, category, onConfi
             style={{
               backgroundColor: isDark ? '#FF6B6B' : '#EF5350',
               color: '#ffffff',
-              fontFamily: 'var(--font-manrope)',
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
             }}
           >
             Delete

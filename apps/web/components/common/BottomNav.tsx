@@ -1,76 +1,100 @@
 'use client';
 
+import { useState } from 'react';
 import { useAppStore } from '@/store';
+import { Pencil, LayoutGrid, Settings } from 'lucide-react';
 
 const tabs = [
-  { id: 'notes' as const, label: 'Notes', icon: '◈' },
-  { id: 'categories' as const, label: 'Categories', icon: '📂' },
-  { id: 'settings' as const, label: 'Settings', icon: '⚙' },
+  { id: 'notes' as const, icon: Pencil, label: 'Notes' },
+  { id: 'categories' as const, icon: LayoutGrid, label: 'Categories' },
+  { id: 'settings' as const, icon: Settings, label: 'Settings' },
 ];
 
 export default function BottomNav() {
   const { activeTab, setActiveTab, theme } = useAppStore();
   const isDark = theme === 'dark';
+  const [hoveredTab, setHoveredTab] = useState<string | null>(null);
+
+  const pillBg = isDark ? 'rgba(224,225,221,0.08)' : 'rgba(27,38,59,0.06)';
+  const pillBorder = isDark ? 'rgba(224,225,221,0.12)' : 'rgba(27,38,59,0.1)';
+  const hoverBg = isDark ? 'rgba(224,225,221,0.12)' : 'rgba(27,38,59,0.08)';
+  const iconColor = isDark ? '#E0E1DD' : '#1B263B';
 
   return (
-    <nav
-      className="fixed bottom-0 left-0 right-0 z-50 glass-card"
-      style={{
-        backgroundColor: isDark ? 'rgba(13,27,42,0.95)' : 'rgba(248,247,244,0.95)',
-        backdropFilter: 'blur(30px)',
-        WebkitBackdropFilter: 'blur(30px)',
-        borderTop: `1px solid ${isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)'}`,
-      }}
+    <div
+      className="fixed z-[60] flex flex-col items-center"
+      style={{ bottom: 20, left: '50%', transform: 'translateX(-50%)' }}
     >
-      <div className="flex items-center justify-around px-6 pt-2 pb-2 max-w-lg mx-auto">
+      {/* Tooltip */}
+      {hoveredTab && (
+        <div
+          className="mb-1.5 px-3 py-1 rounded-lg text-xs font-medium whitespace-nowrap"
+          style={{
+            backgroundColor: isDark ? '#243447' : '#FFFFFF',
+            border: `1px solid ${pillBorder}`,
+            color: isDark ? '#E0E1DD' : '#1B263B',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            backdropFilter: 'blur(12px)',
+          }}
+        >
+          {hoveredTab}
+        </div>
+      )}
+      {/* Pill bar */}
+      <div
+        className="flex items-center gap-[3px] px-1.5"
+        style={{
+          height: 44,
+          borderRadius: 22,
+          background: pillBg,
+          border: `1px solid ${pillBorder}`,
+          backdropFilter: 'blur(16px)',
+        }}
+      >
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
+          const Icon = tab.icon;
           return (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className="flex flex-col items-center gap-1 transition-all duration-200"
+              onMouseEnter={() => setHoveredTab(tab.label)}
+              onMouseLeave={() => setHoveredTab(null)}
+              className="relative flex items-center justify-center transition-all duration-200"
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: '50%',
+                background: isActive ? hoverBg : 'transparent',
+              }}
             >
-              <div
-                className="flex items-center justify-center transition-all duration-200"
+              <Icon
+                size={18}
+                strokeWidth={1.5}
                 style={{
-                  width: isActive ? 48 : 32,
-                  height: 32,
-                  borderRadius: 16,
-                  background: isActive
-                    ? `linear-gradient(135deg, ${isDark ? '#F4A261' : '#E09049'}, ${isDark ? '#E09049' : '#C47A38'})`
-                    : 'transparent',
-                  boxShadow: isActive
-                    ? `0 4px 16px ${isDark ? 'rgba(244,162,97,0.3)' : 'rgba(224,144,73,0.3)'}`
-                    : 'none',
+                  color: iconColor,
+                  opacity: isActive ? 1 : 0.45,
+                  transition: 'opacity 0.2s',
                 }}
-              >
-                <span
-                  className="text-lg transition-transform duration-200"
+              />
+              {isActive && (
+                <div
+                  className="absolute"
                   style={{
-                    opacity: isActive ? 1 : 0.5,
-                    color: isActive ? (isDark ? '#0D1B2A' : '#FFFFFF') : (isDark ? '#E0E1DD' : '#0D1B2A'),
-                    transform: isActive ? 'scale(1.1)' : 'scale(1)',
+                    bottom: 2,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: 4,
+                    height: 4,
+                    borderRadius: 2,
+                    backgroundColor: iconColor,
                   }}
-                >
-                  {tab.icon}
-                </span>
-              </div>
-              <span
-                className="text-[10px] font-body font-medium"
-                style={{
-                  color: isActive
-                    ? (isDark ? '#F4A261' : '#E09049')
-                    : (isDark ? '#778DA9' : '#415A77'),
-                  fontFamily: 'var(--font-manrope)',
-                }}
-              >
-                {tab.label}
-              </span>
+                />
+              )}
             </button>
           );
         })}
       </div>
-    </nav>
+    </div>
   );
 }

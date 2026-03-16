@@ -50,7 +50,7 @@ export default function AppPage() {
   return (
     <div
       className="h-screen w-screen overflow-hidden flex flex-col"
-      style={{ backgroundColor: isDark ? '#0D1B2A' : '#F8F7F4' }}
+      style={{ backgroundColor: isDark ? '#1B263B' : '#E0E1DD' }}
     >
       {/* Main content */}
       <div className="flex-1 overflow-hidden">

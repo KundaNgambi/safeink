@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAppStore } from '@/store';
+import { List, CheckSquare, Code, Link, Paperclip } from 'lucide-react';
 import type { NoteDecrypted } from '@safeink/shared';
 
 interface NoteEditorProps {
@@ -31,29 +32,35 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
     onSave(title.trim(), body, categoryId);
   };
 
-  const accent = isDark ? '#F4A261' : '#E09049';
-  const accentFg = isDark ? '#0D1B2A' : '#FFFFFF';
+  const bgColor = isDark ? '#1B263B' : '#E0E1DD';
+  const primaryText = isDark ? '#E0E1DD' : '#1B263B';
+  const secondaryText = isDark ? 'rgba(224,225,221,0.6)' : 'rgba(27,38,59,0.6)';
+  const tertiaryText = isDark ? 'rgba(224,225,221,0.35)' : 'rgba(27,38,59,0.35)';
+  const borderColor = isDark ? 'rgba(224,225,221,0.12)' : 'rgba(27,38,59,0.12)';
+  const cardBg = isDark ? '#243447' : '#FFFFFF';
+  const oppositeBg = isDark ? '#E0E1DD' : '#1B263B';
+  const oppositeFg = isDark ? '#1B263B' : '#E0E1DD';
 
   return (
     <div
       className="fixed inset-0 z-50 flex flex-col fade-in"
-      style={{ backgroundColor: isDark ? '#0D1B2A' : '#F8F7F4' }}
+      style={{ backgroundColor: bgColor }}
     >
       {/* Header */}
       <div
         className="flex items-center justify-between px-5 py-4"
-        style={{ borderBottom: `1px solid ${isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)'}` }}
+        style={{ borderBottom: `1px solid ${borderColor}` }}
       >
         <button
           onClick={onClose}
           className="text-sm font-body font-semibold px-3 py-1.5 rounded-lg"
-          style={{ color: isDark ? '#778DA9' : '#415A77' }}
+          style={{ color: secondaryText, backgroundColor: 'transparent' }}
         >
           Cancel
         </button>
         <span
           className="text-sm font-display font-bold"
-          style={{ color: isDark ? '#E0E1DD' : '#0D1B2A', fontFamily: 'var(--font-bricolage)' }}
+          style={{ color: primaryText, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
         >
           {note ? 'Edit Note' : 'New Note'}
         </span>
@@ -61,8 +68,8 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
           onClick={handleSave}
           className="text-sm font-body font-bold px-4 py-1.5 rounded-lg transition-all"
           style={{
-            backgroundColor: title.trim() ? accent : `${accent}33`,
-            color: title.trim() ? accentFg : `${accent}88`,
+            backgroundColor: title.trim() ? oppositeBg : `${isDark ? 'rgba(224,225,221,0.15)' : 'rgba(27,38,59,0.15)'}`,
+            color: title.trim() ? oppositeFg : tertiaryText,
           }}
         >
           Save
@@ -72,15 +79,15 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
       {/* Category selector */}
       <div
         className="flex items-center gap-2 px-5 py-3 overflow-x-auto"
-        style={{ borderBottom: `1px solid ${isDark ? 'rgba(119,141,169,0.08)' : 'rgba(13,27,42,0.04)'}` }}
+        style={{ borderBottom: `1px solid ${borderColor}` }}
       >
         <button
           onClick={() => setCategoryId(null)}
           className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-body font-semibold transition-all"
           style={{
-            backgroundColor: !categoryId ? `${accent}20` : 'transparent',
-            color: !categoryId ? accent : (isDark ? '#778DA9' : '#415A77'),
-            border: `1px solid ${!categoryId ? `${accent}40` : (isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)')}`,
+            backgroundColor: !categoryId ? primaryText : 'transparent',
+            color: !categoryId ? (isDark ? '#1B263B' : '#E0E1DD') : secondaryText,
+            border: `1.5px solid ${!categoryId ? primaryText : borderColor}`,
           }}
         >
           No Category
@@ -91,12 +98,12 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
             onClick={() => setCategoryId(cat.id)}
             className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-body font-semibold transition-all"
             style={{
-              backgroundColor: categoryId === cat.id ? `${cat.color}33` : 'transparent',
-              color: categoryId === cat.id ? cat.color : (isDark ? '#778DA9' : '#415A77'),
-              border: `1px solid ${categoryId === cat.id ? `${cat.color}66` : (isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)')}`,
+              backgroundColor: categoryId === cat.id ? primaryText : 'transparent',
+              color: categoryId === cat.id ? (isDark ? '#1B263B' : '#E0E1DD') : secondaryText,
+              border: `1.5px solid ${categoryId === cat.id ? primaryText : borderColor}`,
             }}
           >
-            {cat.icon} {cat.name}
+            {cat.name}
           </button>
         ))}
       </div>
@@ -110,8 +117,8 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
           placeholder="Note title..."
           className="w-full text-xl font-display font-bold bg-transparent outline-none mb-4"
           style={{
-            fontFamily: 'var(--font-bricolage)',
-            color: isDark ? '#E0E1DD' : '#0D1B2A',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            color: primaryText,
           }}
           autoFocus
         />
@@ -121,8 +128,8 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
           placeholder="Start writing..."
           className="w-full flex-1 bg-transparent outline-none resize-none text-sm leading-relaxed font-body"
           style={{
-            fontFamily: 'var(--font-manrope)',
-            color: isDark ? '#E0E1DD' : '#0D1B2A',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            color: primaryText,
             minHeight: 400,
           }}
         />
@@ -132,19 +139,41 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
       <div
         className="flex items-center gap-1 px-5 py-3"
         style={{
-          borderTop: `1px solid ${isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)'}`,
-          backgroundColor: isDark ? 'rgba(13,27,42,0.95)' : 'rgba(248,247,244,0.95)',
+          borderTop: `1px solid ${borderColor}`,
+          backgroundColor: cardBg,
         }}
       >
-        {['B', 'I', 'U', 'S', 'H1', 'H2', '≡', '☑', '<>', '🔗', '📎'].map((btn) => (
+        {[
+          { label: 'B', key: 'bold' },
+          { label: 'I', key: 'italic' },
+          { label: 'U', key: 'underline' },
+          { label: 'S', key: 'strike' },
+          { label: 'H1', key: 'h1' },
+          { label: 'H2', key: 'h2' },
+        ].map((btn) => (
           <button
-            key={btn}
-            className="flex items-center justify-center w-8 h-8 rounded-lg text-xs font-bold transition-colors hover:bg-white/5"
-            style={{ color: isDark ? '#778DA9' : '#415A77' }}
+            key={btn.key}
+            className="flex items-center justify-center w-8 h-8 rounded-lg text-xs font-bold transition-colors"
+            style={{ color: secondaryText }}
           >
-            {btn}
+            {btn.label}
           </button>
         ))}
+        <button className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors" style={{ color: secondaryText }}>
+          <List size={14} />
+        </button>
+        <button className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors" style={{ color: secondaryText }}>
+          <CheckSquare size={14} />
+        </button>
+        <button className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors" style={{ color: secondaryText }}>
+          <Code size={14} />
+        </button>
+        <button className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors" style={{ color: secondaryText }}>
+          <Link size={14} />
+        </button>
+        <button className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors" style={{ color: secondaryText }}>
+          <Paperclip size={14} />
+        </button>
       </div>
     </div>
   );

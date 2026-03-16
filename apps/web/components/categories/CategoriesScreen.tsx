@@ -2,10 +2,9 @@
 
 import { useState, useCallback } from 'react';
 import { useAppStore } from '@/store';
-import CategoryItem from './CategoryItem';
 import CategoryModal from './CategoryModal';
 import DeleteCategoryModal from './DeleteCategoryModal';
-import { CATEGORY_ICONS, CATEGORY_COLORS } from '@safeink/shared';
+import { Plus, GripHorizontal, Pencil, Trash2, FolderOpen } from 'lucide-react';
 
 export default function CategoriesScreen() {
   const {
@@ -17,7 +16,15 @@ export default function CategoriesScreen() {
     setActiveTab, setActiveCategoryFilter,
   } = useAppStore();
   const isDark = theme === 'dark';
-  const accent = isDark ? '#F4A261' : '#E09049';
+
+  const primaryText = isDark ? '#E0E1DD' : '#1B263B';
+  const secondaryText = isDark ? 'rgba(224,225,221,0.6)' : 'rgba(27,38,59,0.6)';
+  const tertiaryText = isDark ? 'rgba(224,225,221,0.35)' : 'rgba(27,38,59,0.35)';
+  const borderColor = isDark ? 'rgba(224,225,221,0.12)' : 'rgba(27,38,59,0.12)';
+  const cardBg = isDark ? '#243447' : '#FFFFFF';
+  const cardBorder = isDark ? 'rgba(224,225,221,0.1)' : 'rgba(27,38,59,0.1)';
+  const oppositeBg = isDark ? '#E0E1DD' : '#1B263B';
+  const oppositeFg = isDark ? '#1B263B' : '#E0E1DD';
 
   const [dragOverId, setDragOverId] = useState<string | null>(null);
   const [dragId, setDragId] = useState<string | null>(null);
@@ -76,7 +83,6 @@ export default function CategoriesScreen() {
   };
 
   const handleDeleteCategory = (categoryId: string, reassignTo: string | null) => {
-    // Reassign notes
     const { notes, updateNote } = useAppStore.getState();
     const allDescendantIds = getDescendantIds(categoryId, categories);
     const affectedIds = [categoryId, ...allDescendantIds];
@@ -87,7 +93,6 @@ export default function CategoriesScreen() {
       }
     });
 
-    // Delete category and descendants
     affectedIds.forEach((id) => deleteCategory(id));
   };
 
@@ -96,58 +101,134 @@ export default function CategoriesScreen() {
     setActiveTab('notes');
   };
 
+  const children = (parentId: string) =>
+    categories.filter((c) => c.parent_id === parentId).sort((a, b) => a.sort_order - b.sort_order);
+
+  const renderCategory = (cat: typeof categories[number], depth: number) => {
+    const isOver = dragOverId === cat.id;
+    const kids = children(cat.id);
+
+    return (
+      <div key={cat.id}>
+        <div
+          draggable
+          onDragStart={() => handleDragStart(cat.id)}
+          onDragOver={(e) => {
+            e.preventDefault();
+            handleDragOver(cat.id);
+          }}
+          onDragEnd={handleDragEnd}
+          onClick={() => handleCategoryClick(cat.id)}
+          className="flex items-center gap-3 cursor-pointer transition-all duration-200"
+          style={{
+            padding: '14px 16px',
+            marginLeft: depth * 24,
+            borderRadius: 16,
+            backgroundColor: isOver ? (isDark ? 'rgba(224,225,221,0.15)' : 'rgba(27,38,59,0.1)') : cardBg,
+            border: `1px solid ${isOver ? borderColor : cardBorder}`,
+            marginBottom: 8,
+          }}
+        >
+          {/* Drag handle */}
+          <GripHorizontal size={16} style={{ color: tertiaryText, cursor: 'grab', flexShrink: 0 }} />
+
+          {/* Name */}
+          <div className="flex-1 min-w-0">
+            <h3
+              className="text-sm font-bold truncate"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: primaryText }}
+            >
+              {cat.name}
+            </h3>
+            <p
+              className="text-[11px]"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: secondaryText }}
+            >
+              {kids.length > 0 ? `${kids.length} sub` : 'Empty'}
+            </p>
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setEditingCategory(cat);
+              }}
+              className="flex items-center justify-center transition-colors hover:opacity-80"
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 8,
+                backgroundColor: 'transparent',
+              }}
+            >
+              <Pencil size={14} style={{ color: secondaryText }} />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setDeletingCategory(cat);
+              }}
+              className="flex items-center justify-center transition-colors hover:opacity-80"
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 8,
+                backgroundColor: 'transparent',
+              }}
+            >
+              <Trash2 size={14} style={{ color: secondaryText }} />
+            </button>
+          </div>
+        </div>
+
+        {/* Children */}
+        {kids.map((child) => renderCategory(child, depth + 1))}
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
       <div className="px-5 pt-5 pb-4 flex items-center justify-between">
         <h1
           className="text-2xl font-[800]"
-          style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#E0E1DD' : '#0D1B2A' }}
+          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: primaryText }}
         >
           Categories
         </h1>
         <button
           onClick={() => setShowCreateCategory(true)}
-          className="px-4 py-2 rounded-xl text-sm font-body font-bold transition-all hover:scale-105"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-body font-bold transition-all hover:scale-105"
           style={{
-            backgroundColor: `${accent}14`,
-            color: accent,
-            border: `1px solid ${accent}33`,
-            fontFamily: 'var(--font-manrope)',
+            backgroundColor: oppositeBg,
+            color: oppositeFg,
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
           }}
         >
-          + New
+          <Plus size={14} />
+          New
         </button>
       </div>
 
       {/* Category list */}
       <div className="flex-1 overflow-auto px-5 pb-24">
         {topCategories.length > 0 ? (
-          topCategories.map((cat) => (
-            <div key={cat.id} onClick={() => handleCategoryClick(cat.id)} className="cursor-pointer">
-              <CategoryItem
-                category={cat}
-                depth={0}
-                allCategories={categories}
-                onDragStart={handleDragStart}
-                onDragOver={handleDragOver}
-                onDragEnd={handleDragEnd}
-                dragOverId={dragOverId}
-              />
-            </div>
-          ))
+          topCategories.map((cat) => renderCategory(cat, 0))
         ) : (
           <div className="flex flex-col items-center justify-center py-20">
-            <span className="text-4xl mb-4">📂</span>
+            <FolderOpen size={40} style={{ color: secondaryText, marginBottom: 16 }} />
             <h3
               className="text-lg font-display font-bold mb-2"
-              style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#E0E1DD' : '#0D1B2A' }}
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: primaryText }}
             >
               No categories yet
             </h3>
             <p
               className="text-sm font-body text-center"
-              style={{ color: isDark ? '#778DA9' : '#415A77', fontFamily: 'var(--font-manrope)' }}
+              style={{ color: secondaryText, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
               Create categories to organize your notes
             </p>

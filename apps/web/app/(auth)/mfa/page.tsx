@@ -68,20 +68,20 @@ export default function MFAPage() {
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-center px-6"
-      style={{ backgroundColor: '#0D1B2A' }}
+      style={{ backgroundColor: '#1B263B' }}
     >
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-10">
-          <Logo size={56} showWordmark={false} />
+          <Logo size={56} />
           <h1
-            className="text-xl font-[800] mt-6 mb-2"
-            style={{ fontFamily: 'var(--font-bricolage)', color: '#E0E1DD' }}
+            className="text-xl font-bold mt-6 mb-2"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: '#E0E1DD' }}
           >
             Two-Factor Authentication
           </h1>
           <p
             className="text-sm text-center"
-            style={{ fontFamily: 'var(--font-manrope)', color: '#778DA9' }}
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: 'rgba(224,225,221,0.6)' }}
           >
             Enter the 6-digit code from your authenticator app
           </p>
@@ -99,12 +99,12 @@ export default function MFAPage() {
               value={digit}
               onChange={(e) => handleChange(i, e.target.value)}
               onKeyDown={(e) => handleKeyDown(i, e)}
-              className="w-12 h-14 text-center text-xl font-bold rounded-xl bg-transparent outline-none transition-all focus:ring-2"
+              className="w-12 h-14 text-center text-xl font-bold rounded-xl bg-transparent outline-none transition-all"
               style={{
-                border: `2px solid ${digit ? '#F4A261' : 'rgba(119,141,169,0.2)'}`,
+                border: `2px solid ${digit ? '#E0E1DD' : 'rgba(224,225,221,0.12)'}`,
                 color: '#E0E1DD',
-                fontFamily: 'var(--font-jetbrains)',
-                boxShadow: digit ? '0 0 12px rgba(244,162,97,0.2)' : 'none',
+                fontFamily: "'JetBrains Mono', monospace",
+                boxShadow: digit ? '0 0 12px rgba(224,225,221,0.15)' : 'none',
               }}
               autoFocus={i === 0}
             />
@@ -112,7 +112,7 @@ export default function MFAPage() {
         </div>
 
         {error && (
-          <p className="text-xs text-center mb-4" style={{ color: '#E07A8E', fontFamily: 'var(--font-manrope)' }}>
+          <p className="text-xs text-center mb-4" style={{ color: '#C45C6A', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
             {error}
           </p>
         )}
@@ -120,11 +120,12 @@ export default function MFAPage() {
         <button
           onClick={handleVerify}
           disabled={!isComplete || loading || !factorId}
-          className="w-full py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-[1.02] active:scale-[0.98]"
+          className="w-full py-3.5 rounded-2xl text-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
           style={{
-            background: isComplete ? 'linear-gradient(135deg, #F4A261, #E09049)' : 'rgba(244,162,97,0.2)',
-            color: isComplete ? '#0D1B2A' : '#F4A26166',
-            fontFamily: 'var(--font-manrope)',
+            backgroundColor: isComplete ? '#E0E1DD' : 'rgba(224,225,221,0.2)',
+            color: isComplete ? '#1B263B' : 'rgba(224,225,221,0.35)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            fontWeight: 600,
             opacity: loading ? 0.7 : 1,
           }}
         >
@@ -133,10 +134,10 @@ export default function MFAPage() {
 
         <p
           className="text-center text-xs mt-6"
-          style={{ color: '#415A77', fontFamily: 'var(--font-manrope)' }}
+          style={{ color: 'rgba(224,225,221,0.35)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}
         >
           Didn&apos;t receive a code?{' '}
-          <button style={{ color: '#F4A261' }} className="font-semibold hover:underline">
+          <button style={{ color: '#E0E1DD' }} className="font-semibold hover:underline">
             Resend
           </button>
         </p>

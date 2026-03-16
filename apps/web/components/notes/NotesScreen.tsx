@@ -6,11 +6,11 @@ import Logo from '@/components/common/Logo';
 import ThemeToggle from '@/components/common/ThemeToggle';
 import NoteCardPinned from './NoteCardPinned';
 import NoteCardRecent from './NoteCardRecent';
+import { Search, X, Lock } from 'lucide-react';
 
 export default function NotesScreen() {
   const { theme, notes, categories, activeCategoryFilter, setActiveCategoryFilter, searchQuery, setSearchQuery, loading } = useAppStore();
   const isDark = theme === 'dark';
-  const accent = isDark ? '#F4A261' : '#E09049';
 
   const filteredNotes = useMemo(() => {
     let filtered = notes.filter((n) => !n.deleted_at && !n.archived);
@@ -40,11 +40,17 @@ export default function NotesScreen() {
   const recentNotes = filteredNotes.filter((n) => !n.pinned);
   const topCategories = categories.filter((c) => !c.parent_id);
 
+  const borderColor = isDark ? 'rgba(224,225,221,0.12)' : 'rgba(27,38,59,0.12)';
+  const secondaryText = isDark ? 'rgba(224,225,221,0.6)' : 'rgba(27,38,59,0.6)';
+  const primaryText = isDark ? '#E0E1DD' : '#1B263B';
+  const cardBg = isDark ? '#243447' : '#FFFFFF';
+  const cardBorder = isDark ? 'rgba(224,225,221,0.1)' : 'rgba(27,38,59,0.1)';
+
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
       <div className="px-5 pt-5 pb-3 flex items-center justify-between">
-        <Logo size={40} showWordmark showTagline={false} />
+        <Logo size={32} />
         <ThemeToggle />
       </div>
 
@@ -53,11 +59,11 @@ export default function NotesScreen() {
         <div
           className="flex items-center gap-3 px-4 py-3 rounded-2xl"
           style={{
-            backgroundColor: isDark ? '#1B263B' : '#FFFFFF',
-            border: `1px solid ${isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)'}`,
+            backgroundColor: cardBg,
+            border: `1px solid ${cardBorder}`,
           }}
         >
-          <span style={{ color: isDark ? '#415A77' : '#778DA9' }}>🔍</span>
+          <Search size={16} style={{ color: secondaryText }} />
           <input
             type="text"
             value={searchQuery}
@@ -65,13 +71,13 @@ export default function NotesScreen() {
             placeholder="Search encrypted notes..."
             className="flex-1 bg-transparent outline-none text-sm font-body"
             style={{
-              color: isDark ? '#E0E1DD' : '#0D1B2A',
-              fontFamily: 'var(--font-manrope)',
+              color: primaryText,
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
             }}
           />
           {searchQuery && (
-            <button onClick={() => setSearchQuery('')} style={{ color: isDark ? '#778DA9' : '#415A77' }}>
-              ✕
+            <button onClick={() => setSearchQuery('')} style={{ color: secondaryText }}>
+              <X size={16} />
             </button>
           )}
         </div>
@@ -83,10 +89,10 @@ export default function NotesScreen() {
           onClick={() => setActiveCategoryFilter(null)}
           className="flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-body font-semibold transition-all"
           style={{
-            backgroundColor: !activeCategoryFilter ? `${accent}20` : 'transparent',
-            color: !activeCategoryFilter ? accent : (isDark ? '#778DA9' : '#415A77'),
-            border: `1px solid ${!activeCategoryFilter ? `${accent}40` : (isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)')}`,
-            fontFamily: 'var(--font-manrope)',
+            backgroundColor: !activeCategoryFilter ? primaryText : 'transparent',
+            color: !activeCategoryFilter ? (isDark ? '#1B263B' : '#E0E1DD') : secondaryText,
+            border: `1.5px solid ${!activeCategoryFilter ? primaryText : borderColor}`,
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
           }}
         >
           All ({filteredNotes.length})
@@ -99,13 +105,13 @@ export default function NotesScreen() {
               onClick={() => setActiveCategoryFilter(isActive ? null : cat.id)}
               className="flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-body font-semibold transition-all whitespace-nowrap"
               style={{
-                backgroundColor: isActive ? `${cat.color}33` : 'transparent',
-                color: isActive ? cat.color : (isDark ? '#778DA9' : '#415A77'),
-                border: `1px solid ${isActive ? `${cat.color}66` : (isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)')}`,
-                fontFamily: 'var(--font-manrope)',
+                backgroundColor: isActive ? primaryText : 'transparent',
+                color: isActive ? (isDark ? '#1B263B' : '#E0E1DD') : secondaryText,
+                border: `1.5px solid ${isActive ? primaryText : borderColor}`,
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
               }}
             >
-              {cat.icon} {cat.name}
+              {cat.name}
             </button>
           );
         })}
@@ -121,13 +127,13 @@ export default function NotesScreen() {
                 key={i}
                 className="rounded-2xl p-4 animate-pulse"
                 style={{
-                  backgroundColor: isDark ? '#1B263B' : '#FFFFFF',
-                  border: `1px solid ${isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)'}`,
+                  backgroundColor: cardBg,
+                  border: `1px solid ${cardBorder}`,
                 }}
               >
-                <div className="h-4 rounded-lg mb-3" style={{ backgroundColor: isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)', width: '60%' }} />
-                <div className="h-3 rounded-lg mb-2" style={{ backgroundColor: isDark ? 'rgba(119,141,169,0.08)' : 'rgba(13,27,42,0.04)', width: '100%' }} />
-                <div className="h-3 rounded-lg" style={{ backgroundColor: isDark ? 'rgba(119,141,169,0.08)' : 'rgba(13,27,42,0.04)', width: '75%' }} />
+                <div className="h-4 rounded-lg mb-3" style={{ backgroundColor: isDark ? 'rgba(224,225,221,0.1)' : 'rgba(27,38,59,0.08)', width: '60%' }} />
+                <div className="h-3 rounded-lg mb-2" style={{ backgroundColor: isDark ? 'rgba(224,225,221,0.06)' : 'rgba(27,38,59,0.04)', width: '100%' }} />
+                <div className="h-3 rounded-lg" style={{ backgroundColor: isDark ? 'rgba(224,225,221,0.06)' : 'rgba(27,38,59,0.04)', width: '75%' }} />
               </div>
             ))}
           </div>
@@ -137,8 +143,17 @@ export default function NotesScreen() {
         {!loading && pinnedNotes.length > 0 && (
           <>
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs font-body font-semibold uppercase tracking-wider" style={{ color: isDark ? '#415A77' : '#778DA9', fontFamily: 'var(--font-manrope)' }}>
-                📌 Pinned
+              <span
+                className="font-body font-bold uppercase"
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  color: secondaryText,
+                  letterSpacing: '1.5px',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                }}
+              >
+                PINNED
               </span>
             </div>
             <div className="grid grid-cols-2 gap-3 mb-5">
@@ -153,8 +168,17 @@ export default function NotesScreen() {
         {!loading && recentNotes.length > 0 && (
           <>
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs font-body font-semibold uppercase tracking-wider" style={{ color: isDark ? '#415A77' : '#778DA9', fontFamily: 'var(--font-manrope)' }}>
-                Recent
+              <span
+                className="font-body font-bold uppercase"
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  color: secondaryText,
+                  letterSpacing: '1.5px',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                }}
+              >
+                RECENT
               </span>
             </div>
             <div className="flex flex-col gap-3">
@@ -167,16 +191,16 @@ export default function NotesScreen() {
 
         {!loading && filteredNotes.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20">
-            <span className="text-4xl mb-4">🔐</span>
+            <Lock size={40} style={{ color: secondaryText, marginBottom: 16 }} />
             <h3
               className="text-lg font-display font-bold mb-2"
-              style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#E0E1DD' : '#0D1B2A' }}
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: primaryText }}
             >
               {searchQuery ? 'No notes found' : 'No notes yet'}
             </h3>
             <p
               className="text-sm font-body text-center"
-              style={{ color: isDark ? '#778DA9' : '#415A77', fontFamily: 'var(--font-manrope)' }}
+              style={{ color: secondaryText, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
               {searchQuery ? 'Try a different search term' : 'Tap + to create your first encrypted note'}
             </p>

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Eye, EyeOff, Check, X } from 'lucide-react';
 import Logo from '@/components/common/Logo';
 import { useAuthStore } from '@/store/auth';
 import { signupSchema } from '@safeink/shared';
@@ -64,17 +65,40 @@ export default function SignupPage() {
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-center px-6 py-10"
-      style={{ backgroundColor: '#0D1B2A' }}
+      style={{ backgroundColor: '#1B263B' }}
     >
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <Logo size={56} showWordmark showTagline />
+          <Logo size={72} />
+          <div className="mt-4 text-center">
+            <h1
+              className="font-bold"
+              style={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontSize: 28,
+                fontWeight: 700,
+                color: '#E0E1DD',
+              }}
+            >
+              Obscura
+            </h1>
+            <p
+              className="mt-1"
+              style={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontSize: 13,
+                color: 'rgba(224,225,221,0.6)',
+              }}
+            >
+              Hidden by design.
+            </p>
+          </div>
         </div>
 
         <h2
-          className="text-xl font-[800] text-center mb-6"
-          style={{ fontFamily: 'var(--font-bricolage)', color: '#E0E1DD' }}
+          className="text-xl font-bold text-center mb-6"
+          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: '#E0E1DD' }}
         >
           Create your account
         </h2>
@@ -90,14 +114,14 @@ export default function SignupPage() {
               {passwordChecks.map((check) => (
                 <span
                   key={check.label}
-                  className="text-[10px] px-2 py-1 rounded-md font-semibold"
+                  className="text-[10px] px-2 py-1 rounded-md font-semibold inline-flex items-center gap-1"
                   style={{
-                    backgroundColor: check.pass ? '#F4A26120' : '#E07A8E20',
-                    color: check.pass ? '#F4A261' : '#E07A8E',
-                    fontFamily: 'var(--font-manrope)',
+                    backgroundColor: check.pass ? 'rgba(224,225,221,0.1)' : 'rgba(196,92,106,0.1)',
+                    color: check.pass ? '#E0E1DD' : '#C45C6A',
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
                   }}
                 >
-                  {check.pass ? '✓' : '✕'} {check.label}
+                  {check.pass ? <Check size={10} /> : <X size={10} />} {check.label}
                 </span>
               ))}
             </div>
@@ -106,19 +130,19 @@ export default function SignupPage() {
           <PasswordField label="Confirm Password" value={confirmPassword} onChange={setConfirmPassword} placeholder="Re-enter password" />
 
           {password && confirmPassword && password !== confirmPassword && (
-            <p className="text-[10px]" style={{ color: '#E07A8E', fontFamily: 'var(--font-manrope)' }}>
+            <p className="text-[10px]" style={{ color: '#C45C6A', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
               Passwords do not match
             </p>
           )}
 
           {error && (
-            <p className="text-xs text-center" style={{ color: '#E07A8E', fontFamily: 'var(--font-manrope)' }}>
+            <p className="text-xs text-center" style={{ color: '#C45C6A', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
               {error}
             </p>
           )}
 
           {success && (
-            <p className="text-xs text-center" style={{ color: '#F4A261', fontFamily: 'var(--font-manrope)' }}>
+            <p className="text-xs text-center" style={{ color: '#E0E1DD', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
               {success}
             </p>
           )}
@@ -126,11 +150,12 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={!allValid || loading}
-            className="w-full py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full py-3.5 rounded-2xl text-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
             style={{
-              background: allValid ? 'linear-gradient(135deg, #F4A261, #E09049)' : 'rgba(244,162,97,0.2)',
-              color: allValid ? '#0D1B2A' : '#F4A26166',
-              fontFamily: 'var(--font-manrope)',
+              backgroundColor: allValid ? '#E0E1DD' : 'rgba(224,225,221,0.2)',
+              color: allValid ? '#1B263B' : 'rgba(224,225,221,0.35)',
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontWeight: 600,
               opacity: loading ? 0.7 : 1,
             }}
           >
@@ -138,9 +163,9 @@ export default function SignupPage() {
           </button>
         </form>
 
-        <p className="text-center text-sm mt-6" style={{ color: '#778DA9', fontFamily: 'var(--font-manrope)' }}>
+        <p className="text-center text-sm mt-6" style={{ color: 'rgba(224,225,221,0.6)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
           Already have an account?{' '}
-          <a href="/login" style={{ color: '#F4A261' }} className="font-semibold hover:underline">
+          <a href="/login" style={{ color: '#E0E1DD' }} className="font-semibold hover:underline">
             Sign In
           </a>
         </p>
@@ -158,7 +183,7 @@ function InputField({
     <div>
       <label
         className="block text-xs font-semibold mb-2 uppercase tracking-wider"
-        style={{ fontFamily: 'var(--font-manrope)', color: '#778DA9' }}
+        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: 'rgba(224,225,221,0.6)' }}
       >
         {label}
       </label>
@@ -169,9 +194,9 @@ function InputField({
         placeholder={placeholder}
         className="w-full px-4 py-3 rounded-xl text-sm bg-transparent outline-none transition-all"
         style={{
-          border: '1px solid rgba(119,141,169,0.2)',
+          border: '1px solid rgba(224,225,221,0.12)',
           color: '#E0E1DD',
-          fontFamily: 'var(--font-manrope)',
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
         }}
       />
     </div>
@@ -189,7 +214,7 @@ function PasswordField({
     <div>
       <label
         className="block text-xs font-semibold mb-2 uppercase tracking-wider"
-        style={{ fontFamily: 'var(--font-manrope)', color: '#778DA9' }}
+        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: 'rgba(224,225,221,0.6)' }}
       >
         {label}
       </label>
@@ -201,30 +226,19 @@ function PasswordField({
           placeholder={placeholder}
           className="w-full px-4 py-3 pr-12 rounded-xl text-sm bg-transparent outline-none transition-all"
           style={{
-            border: '1px solid rgba(119,141,169,0.2)',
+            border: '1px solid rgba(224,225,221,0.12)',
             color: '#E0E1DD',
-            fontFamily: 'var(--font-manrope)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
           }}
         />
         <button
           type="button"
           onClick={() => setVisible(!visible)}
           className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md transition-colors hover:bg-white/5"
-          style={{ color: '#778DA9', fontSize: 14 }}
+          style={{ color: 'rgba(224,225,221,0.6)' }}
           aria-label={visible ? 'Hide password' : 'Show password'}
         >
-          {visible ? (
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
-              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
-              <line x1="1" y1="1" x2="23" y2="23" />
-            </svg>
-          ) : (
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
-          )}
+          {visible ? <EyeOff size={18} /> : <Eye size={18} />}
         </button>
       </div>
     </div>

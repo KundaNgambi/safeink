@@ -2,141 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Fonts loaded via link tag in layout for non-blocking loading */
-
 :root {
-  --font-bricolage: 'Plus Jakarta Sans', sans-serif;
-  --font-manrope: 'Plus Jakarta Sans', sans-serif;
-  --font-jetbrains: 'JetBrains Mono', monospace;
-  --font-serif: 'Newsreader', serif;
+  --prussian: #1B263B;
+  --alabaster: #E0E1DD;
+  --font-primary: 'Plus Jakarta Sans', 'SamsungOne', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
-/* Hide all scrollbars globally */
-*::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-}
-
-* {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-html {
-  -webkit-overflow-scrolling: touch;
-}
+*::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+* { scrollbar-width: none; -ms-overflow-style: none; }
+html { -webkit-overflow-scrolling: touch; }
 
 body {
-  font-family: var(--font-manrope);
+  font-family: var(--font-primary);
   transition: background-color 0.4s ease, color 0.4s ease;
   overflow: hidden;
 }
 
-/* Dark theme */
 body.dark {
-  background-color: #0D1B2A;
+  background-color: #1B263B;
   color: #E0E1DD;
-}
-
-/* Light theme */
-body.light {
-  background-color: #F8F7F4;
-  color: #0D1B2A;
-}
-
-/* Glassmorphic card */
-.glass-card {
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-/* Accent gradient */
-.accent-gradient {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-}
-
-body.dark {
-  --accent: #F4A261;
-  --accent-dark: #E09049;
-  --accent-fg: #0D1B2A;
+  --bg: #1B263B;
+  --bg-card: #243447;
+  --text: #E0E1DD;
+  --text-secondary: rgba(224,225,221,0.6);
+  --text-tertiary: rgba(224,225,221,0.35);
+  --border: rgba(224,225,221,0.12);
+  --active: rgba(224,225,221,0.15);
+  --icon: #E0E1DD;
+  --opposite: #E0E1DD;
+  --card-border: rgba(224,225,221,0.1);
 }
 
 body.light {
-  --accent: #E09049;
-  --accent-dark: #C47A38;
-  --accent-fg: #FFFFFF;
+  background-color: #E0E1DD;
+  color: #1B263B;
+  --bg: #E0E1DD;
+  --bg-card: #FFFFFF;
+  --text: #1B263B;
+  --text-secondary: rgba(27,38,59,0.6);
+  --text-tertiary: rgba(27,38,59,0.35);
+  --border: rgba(27,38,59,0.12);
+  --active: rgba(27,38,59,0.1);
+  --icon: #1B263B;
+  --opposite: #1B263B;
+  --card-border: rgba(27,38,59,0.1);
 }
 
-/* Card hover */
-.note-card {
-  transition: all 0.2s ease;
-}
+.glass-card { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
 
-.note-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-}
+.note-card { transition: all 0.2s ease; }
+.note-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
 
-/* Copy button animation */
-.copy-btn-glow {
-  box-shadow: 0 0 16px rgba(244, 162, 97, 0.4);
-}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal-slide-up { animation: slideUp 0.3s ease forwards; }
 
-/* Modal slide up */
-@keyframes slideUp {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
+@keyframes slideDown { from { transform: translate(-50%, -100%); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+.animate-slide-down { animation: slideDown 0.3s ease forwards; }
 
-.modal-slide-up {
-  animation: slideUp 0.3s ease forwards;
-}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.fade-in { animation: fadeIn 0.2s ease forwards; }
 
-/* Toast slide down */
-@keyframes slideDown {
-  from {
-    transform: translate(-50%, -100%);
-    opacity: 0;
-  }
-  to {
-    transform: translate(-50%, 0);
-    opacity: 1;
-  }
-}
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-.animate-slide-down {
-  animation: slideDown 0.3s ease forwards;
-}
-
-/* Fade in */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.fade-in {
-  animation: fadeIn 0.2s ease forwards;
-}
-
-/* FAB glow */
-.fab-glow {
-  box-shadow: 0 6px 24px rgba(244, 162, 97, 0.27);
-}
-
-body.light .fab-glow {
-  box-shadow: 0 6px 24px rgba(224, 144, 73, 0.3);
-}
-
-/* Selection */
-::selection {
-  background: rgba(244, 162, 97, 0.3);
-}
-
-body.light ::selection {
-  background: rgba(224, 144, 73, 0.3);
-}
+::selection { background: rgba(224,225,221,0.3); }
+body.light ::selection { background: rgba(27,38,59,0.2); }

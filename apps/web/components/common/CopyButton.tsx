@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { useAppStore } from '@/store';
+import { Copy, Check } from 'lucide-react';
 
 interface CopyButtonProps {
   text: string;
@@ -12,37 +13,39 @@ export default function CopyButton({ text, size = 'sm' }: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
   const theme = useAppStore((s) => s.theme);
   const isDark = theme === 'dark';
-  const accent = isDark ? '#F4A261' : '#E09049';
+
+  const primary = isDark ? '#E0E1DD' : '#1B263B';
+  const bg = isDark ? '#1B263B' : '#E0E1DD';
+  const border = isDark ? 'rgba(224,225,221,0.12)' : 'rgba(27,38,59,0.12)';
 
   const handleCopy = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
-      navigator.clipboard.writeText(text);
+      navigator.clipboard.writeText(text).catch(() => {});
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     },
     [text]
   );
 
-  const padding = size === 'sm' ? '5px 12px' : '8px 18px';
-  const fontSize = size === 'sm' ? 11 : 13;
+  const padding = size === 'sm' ? '4px 12px' : '8px 18px';
+  const iconSize = size === 'sm' ? 12 : 14;
 
   return (
     <button
       onClick={handleCopy}
-      className="font-body font-semibold rounded-lg transition-all duration-250 ease-in-out"
+      className="flex items-center gap-1.5 font-medium rounded-lg transition-all duration-200"
       style={{
         padding,
-        fontSize,
-        fontFamily: 'var(--font-manrope)',
-        backgroundColor: copied ? accent : `${accent}14`,
-        color: copied ? (isDark ? '#0D1B2A' : '#FFFFFF') : accent,
-        border: `1px solid ${copied ? accent : `${accent}33`}`,
-        transform: copied ? 'scale(1.05)' : 'scale(1)',
-        boxShadow: copied ? `0 0 16px ${accent}66` : 'none',
+        fontSize: size === 'sm' ? 11 : 13,
+        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        backgroundColor: copied ? primary : 'transparent',
+        color: copied ? bg : isDark ? 'rgba(224,225,221,0.6)' : 'rgba(27,38,59,0.6)',
+        border: `1.5px solid ${copied ? primary : border}`,
       }}
     >
-      {copied ? 'Copied!' : 'Copy'}
+      {copied ? <Check size={iconSize} strokeWidth={2} /> : <Copy size={iconSize} strokeWidth={1.5} />}
+      <span>{copied ? 'Copied' : 'Copy'}</span>
     </button>
   );
 }

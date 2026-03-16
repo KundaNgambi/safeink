@@ -2,6 +2,7 @@
 
 import { useAppStore } from '@/store';
 import CopyButton from '@/components/common/CopyButton';
+import { Lock } from 'lucide-react';
 import type { NoteDecrypted } from '@safeink/shared';
 
 interface NoteCardRecentProps {
@@ -15,66 +16,60 @@ export default function NoteCardRecent({ note }: NoteCardRecentProps) {
   const category = categories.find((c) => c.id === note.category_id);
   const timeAgo = getTimeAgo(note.updated_at);
 
+  const primaryText = isDark ? '#E0E1DD' : '#1B263B';
+  const secondaryText = isDark ? 'rgba(224,225,221,0.6)' : 'rgba(27,38,59,0.6)';
+  const tertiaryText = isDark ? 'rgba(224,225,221,0.35)' : 'rgba(27,38,59,0.35)';
+  const cardBg = isDark ? '#243447' : '#FFFFFF';
+  const cardBorder = isDark ? 'rgba(224,225,221,0.1)' : 'rgba(27,38,59,0.1)';
+
   return (
     <div
       onClick={() => setSelectedNoteId(note.id)}
-      className="note-card cursor-pointer glass-card flex items-center gap-3"
+      className="note-card cursor-pointer flex items-center gap-3"
       style={{
         borderRadius: 20,
         padding: '14px 16px',
-        backgroundColor: isDark ? '#1B263B' : '#FFFFFF',
-        border: `1px solid ${isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)'}`,
-        backdropFilter: 'blur(20px)',
+        backgroundColor: cardBg,
+        border: `1px solid ${cardBorder}`,
       }}
     >
-      {/* Category icon */}
-      <div
-        className="flex-shrink-0 flex items-center justify-center text-lg"
-        style={{
-          width: 42,
-          height: 42,
-          borderRadius: 14,
-          backgroundColor: category ? `${category.color}2e` : (isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)'),
-        }}
-      >
-        {category?.icon || '📝'}
-      </div>
-
       {/* Content */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
           <h3
             className="text-sm font-bold truncate"
-            style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#E0E1DD' : '#0D1B2A' }}
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: primaryText }}
           >
             {note.title}
           </h3>
-          <CopyButton text={`${note.title}\n\n${note.body}`} size="sm" />
         </div>
         <p
           className="text-[11px] truncate mt-0.5"
-          style={{ color: isDark ? '#778DA9' : '#415A77', fontFamily: 'var(--font-manrope)' }}
+          style={{ color: secondaryText, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
         >
           {note.body}
         </p>
         <div className="flex items-center gap-2 mt-1">
           <span
             className="text-[10px]"
-            style={{ fontFamily: 'var(--font-jetbrains)', color: isDark ? '#415A77' : '#778DA9' }}
+            style={{ fontFamily: "'JetBrains Mono', monospace", color: tertiaryText }}
           >
             {timeAgo}
           </span>
-          <span className="text-[10px]" style={{ color: isDark ? '#415A77' : '#778DA9' }}>🔒</span>
+          <Lock size={10} style={{ color: tertiaryText }} />
           {category && (
             <span
               className="text-[10px] font-medium"
-              style={{ color: category.color, fontFamily: 'var(--font-manrope)' }}
+              style={{ color: secondaryText, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
               {category.name}
             </span>
           )}
         </div>
       </div>
+
+      {/* Copy button */}
+      <CopyButton text={`${note.title}\n\n${note.body}`} size="sm" />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useAppStore } from '@/store';
 import CopyButton from '@/components/common/CopyButton';
+import { Pin, Lock, Check } from 'lucide-react';
 import type { NoteDecrypted } from '@safeink/shared';
 
 interface NoteCardPinnedProps {
@@ -15,30 +16,40 @@ export default function NoteCardPinned({ note }: NoteCardPinnedProps) {
   const category = categories.find((c) => c.id === note.category_id);
   const timeAgo = getTimeAgo(note.updated_at);
 
+  const primaryText = isDark ? '#E0E1DD' : '#1B263B';
+  const secondaryText = isDark ? 'rgba(224,225,221,0.6)' : 'rgba(27,38,59,0.6)';
+  const tertiaryText = isDark ? 'rgba(224,225,221,0.35)' : 'rgba(27,38,59,0.35)';
+  const cardBg = isDark ? '#243447' : '#FFFFFF';
+  const cardBorder = isDark ? 'rgba(224,225,221,0.1)' : 'rgba(27,38,59,0.1)';
+
   return (
     <div
       onClick={() => setSelectedNoteId(note.id)}
-      className="note-card cursor-pointer glass-card flex flex-col gap-3"
+      className="note-card cursor-pointer flex flex-col gap-3"
       style={{
         borderRadius: 20,
         padding: 16,
-        backgroundColor: isDark ? '#1B263B' : '#FFFFFF',
-        border: `1px solid ${isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)'}`,
-        backdropFilter: 'blur(20px)',
+        backgroundColor: cardBg,
+        border: `1px solid ${cardBorder}`,
+        position: 'relative',
       }}
     >
-      {/* Tag + Copy row */}
+      {/* Pin icon top-right */}
+      <div style={{ position: 'absolute', top: 12, right: 12 }}>
+        <Pin size={14} style={{ color: secondaryText }} />
+      </div>
+
+      {/* Category + Copy row */}
       <div className="flex items-center justify-between gap-2">
         {category ? (
           <span
-            className="text-[10px] font-body font-semibold px-2 py-1 rounded-md"
+            className="text-[10px] font-body font-medium"
             style={{
-              backgroundColor: `${category.color}2e`,
-              color: category.color,
-              fontFamily: 'var(--font-manrope)',
+              color: secondaryText,
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
             }}
           >
-            {category.icon} {category.name}
+            {category.name}
           </span>
         ) : (
           <span />
@@ -49,7 +60,7 @@ export default function NoteCardPinned({ note }: NoteCardPinnedProps) {
       {/* Title */}
       <h3
         className="text-sm font-bold leading-tight line-clamp-2"
-        style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#E0E1DD' : '#0D1B2A' }}
+        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: primaryText }}
       >
         {note.title}
       </h3>
@@ -57,7 +68,7 @@ export default function NoteCardPinned({ note }: NoteCardPinnedProps) {
       {/* Preview */}
       <p
         className="text-[11px] leading-relaxed line-clamp-2"
-        style={{ color: isDark ? '#778DA9' : '#415A77', fontFamily: 'var(--font-manrope)' }}
+        style={{ color: secondaryText, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
       >
         {note.body}
       </p>
@@ -66,12 +77,12 @@ export default function NoteCardPinned({ note }: NoteCardPinnedProps) {
       <div className="flex items-center gap-2 mt-auto">
         <span
           className="text-[10px]"
-          style={{ fontFamily: 'var(--font-jetbrains)', color: isDark ? '#415A77' : '#778DA9' }}
+          style={{ fontFamily: "'JetBrains Mono', monospace", color: tertiaryText }}
         >
           {timeAgo}
         </span>
-        <span className="text-[10px]" style={{ color: isDark ? '#415A77' : '#778DA9' }}>🔒</span>
-        <span className="text-[10px]" style={{ color: isDark ? '#F4A261' : '#E09049' }}>●</span>
+        <Lock size={10} style={{ color: tertiaryText }} />
+        <Check size={10} style={{ color: tertiaryText }} />
       </div>
     </div>
   );

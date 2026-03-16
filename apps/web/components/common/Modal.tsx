@@ -2,6 +2,7 @@
 
 import { useEffect, useCallback } from 'react';
 import { useAppStore } from '@/store';
+import { X } from 'lucide-react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -46,8 +47,10 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
       <div
         className="relative w-full max-w-lg max-h-[85vh] overflow-auto modal-slide-up"
         style={{
-          backgroundColor: isDark ? '#0D1B2A' : '#F8F7F4',
+          backgroundColor: isDark ? '#243447' : '#FFFFFF',
           borderRadius: '28px 28px 0 0',
+          border: `1px solid ${isDark ? 'rgba(224,225,221,0.12)' : 'rgba(27,38,59,0.1)'}`,
+          borderBottom: 'none',
         }}
       >
         {/* Drag indicator */}
@@ -57,7 +60,7 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
             style={{
               width: 40,
               height: 4,
-              backgroundColor: isDark ? '#415A77' : '#778DA9',
+              backgroundColor: isDark ? 'rgba(224,225,221,0.2)' : 'rgba(27,38,59,0.15)',
             }}
           />
         </div>
@@ -65,7 +68,10 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
         <div className="flex items-center justify-between px-6 py-3">
           <h2
             className="text-xl font-[800]"
-            style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#E0E1DD' : '#0D1B2A' }}
+            style={{
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              color: isDark ? '#E0E1DD' : '#1B263B',
+            }}
           >
             {title}
           </h2>
@@ -76,11 +82,14 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
               width: 36,
               height: 36,
               borderRadius: '50%',
-              backgroundColor: isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)',
-              color: isDark ? '#778DA9' : '#415A77',
+              backgroundColor: isDark ? 'rgba(224,225,221,0.1)' : 'rgba(27,38,59,0.08)',
             }}
           >
-            ✕
+            <X
+              size={16}
+              strokeWidth={1.5}
+              style={{ color: isDark ? '#E0E1DD' : '#1B263B', opacity: 0.6 }}
+            />
           </button>
         </div>
         {/* Body */}

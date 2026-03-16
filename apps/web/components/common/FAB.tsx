@@ -1,6 +1,7 @@
 'use client';
 
 import { useAppStore } from '@/store';
+import { Plus } from 'lucide-react';
 
 export default function FAB() {
   const { activeTab, selectedNoteId, setShowCreateNote, theme } = useAppStore();
@@ -11,23 +12,18 @@ export default function FAB() {
   return (
     <button
       onClick={() => setShowCreateNote(true)}
-      className="fixed z-40 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 fab-glow"
+      className="fixed z-50 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95"
       style={{
-        bottom: 88,
+        bottom: 84,
         left: '50%',
         transform: 'translateX(-50%)',
-        width: 56,
-        height: 56,
-        borderRadius: 18,
-        background: `linear-gradient(135deg, ${isDark ? '#F4A261' : '#E09049'}, ${isDark ? '#E09049' : '#C47A38'})`,
+        width: 54,
+        height: 54,
+        borderRadius: '50%',
+        backgroundColor: isDark ? '#E0E1DD' : '#1B263B',
       }}
     >
-      <span
-        className="text-2xl font-bold leading-none"
-        style={{ color: isDark ? '#0D1B2A' : '#FFFFFF', marginTop: 1 }}
-      >
-        +
-      </span>
+      <Plus size={22} strokeWidth={1.5} style={{ color: isDark ? '#1B263B' : '#E0E1DD' }} />
     </button>
   );
 }

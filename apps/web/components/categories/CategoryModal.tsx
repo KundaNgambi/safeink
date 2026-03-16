@@ -56,7 +56,7 @@ export default function CategoryModal({ isOpen, onClose, category, parentCategor
           style={{
             backgroundColor: `${parentCategory.color}14`,
             color: isDark ? '#8b8fa3' : '#6b7080',
-            fontFamily: 'var(--font-manrope)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
           }}
         >
           Inside: <strong style={{ color: parentCategory.color }}>{parentCategory.icon} {parentCategory.name}</strong>
@@ -67,7 +67,7 @@ export default function CategoryModal({ isOpen, onClose, category, parentCategor
       <div className="mb-5">
         <label
           className="block text-xs font-body font-semibold mb-2 uppercase tracking-wider"
-          style={{ color: isDark ? '#8b8fa3' : '#6b7080', fontFamily: 'var(--font-manrope)' }}
+          style={{ color: isDark ? '#8b8fa3' : '#6b7080', fontFamily: "'Plus Jakarta Sans', sans-serif" }}
         >
           Name
         </label>
@@ -80,11 +80,11 @@ export default function CategoryModal({ isOpen, onClose, category, parentCategor
           style={{
             border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
             color: isDark ? '#f0f1f4' : '#1a1c24',
-            fontFamily: 'var(--font-manrope)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
           }}
           autoFocus
         />
-        <span className="text-[10px] mt-1 block" style={{ color: isDark ? '#555a6e' : '#9ca3af', fontFamily: 'var(--font-jetbrains)' }}>
+        <span className="text-[10px] mt-1 block" style={{ color: isDark ? '#555a6e' : '#9ca3af', fontFamily: "'JetBrains Mono', monospace" }}>
           {name.length}/{MAX_CATEGORY_NAME_LENGTH}
         </span>
       </div>
@@ -93,7 +93,7 @@ export default function CategoryModal({ isOpen, onClose, category, parentCategor
       <div className="mb-5">
         <label
           className="block text-xs font-body font-semibold mb-2 uppercase tracking-wider"
-          style={{ color: isDark ? '#8b8fa3' : '#6b7080', fontFamily: 'var(--font-manrope)' }}
+          style={{ color: isDark ? '#8b8fa3' : '#6b7080', fontFamily: "'Plus Jakarta Sans', sans-serif" }}
         >
           Icon
         </label>
@@ -120,7 +120,7 @@ export default function CategoryModal({ isOpen, onClose, category, parentCategor
       <div className="mb-6">
         <label
           className="block text-xs font-body font-semibold mb-2 uppercase tracking-wider"
-          style={{ color: isDark ? '#8b8fa3' : '#6b7080', fontFamily: 'var(--font-manrope)' }}
+          style={{ color: isDark ? '#8b8fa3' : '#6b7080', fontFamily: "'Plus Jakarta Sans', sans-serif" }}
         >
           Color
         </label>
@@ -146,7 +146,7 @@ export default function CategoryModal({ isOpen, onClose, category, parentCategor
       <div className="mb-6">
         <label
           className="block text-xs font-body font-semibold mb-2 uppercase tracking-wider"
-          style={{ color: isDark ? '#8b8fa3' : '#6b7080', fontFamily: 'var(--font-manrope)' }}
+          style={{ color: isDark ? '#8b8fa3' : '#6b7080', fontFamily: "'Plus Jakarta Sans', sans-serif" }}
         >
           Preview
         </label>
@@ -165,7 +165,7 @@ export default function CategoryModal({ isOpen, onClose, category, parentCategor
           </div>
           <span
             className="text-sm font-bold"
-            style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#f0f1f4' : '#1a1c24' }}
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: isDark ? '#f0f1f4' : '#1a1c24' }}
           >
             {name || 'Category name'}
           </span>
@@ -180,7 +180,7 @@ export default function CategoryModal({ isOpen, onClose, category, parentCategor
         style={{
           backgroundColor: name.trim() ? accent : `${accent}33`,
           color: name.trim() ? accentFg : `${accent}66`,
-          fontFamily: 'var(--font-manrope)',
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
         }}
       >
         {category ? 'Save Changes' : 'Create Category'}

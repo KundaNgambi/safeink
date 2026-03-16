@@ -78,13 +78,13 @@ export default function CategoryItem({
         <div className="flex-1 min-w-0">
           <h3
             className="text-sm font-bold truncate"
-            style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#f0f1f4' : '#1a1c24' }}
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: isDark ? '#f0f1f4' : '#1a1c24' }}
           >
             {category.name}
           </h3>
           <p
             className="text-[11px]"
-            style={{ fontFamily: 'var(--font-manrope)', color: isDark ? '#555a6e' : '#9ca3af' }}
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: isDark ? '#555a6e' : '#9ca3af' }}
           >
             {children.length > 0 && `${children.length} sub`}
             {children.length > 0 && noteCount > 0 && ' · '}
