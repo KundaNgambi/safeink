@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 
 // Public routes that don't require authentication
-const PUBLIC_ROUTES = ['/login', '/signup', '/mfa', '/auth/callback'];
+const PUBLIC_ROUTES = ['/welcome', '/login', '/signup', '/mfa', '/auth/callback'];
 
 // Rate limiting state (in production, use Upstash Redis)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -71,9 +71,9 @@ export async function middleware(request: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-      const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('next', pathname);
-      return NextResponse.redirect(loginUrl);
+      const welcomeUrl = new URL('/welcome', request.url);
+      welcomeUrl.searchParams.set('next', pathname);
+      return NextResponse.redirect(welcomeUrl);
     }
   }
 
@@ -161,6 +161,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    '/((?!_next/static|_next/image|favicon.ico|icons|manifest.json|sw.js).*)',
   ],
 };
