@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useAppStore } from '@/store';
 import CopyButton from '@/components/common/CopyButton';
-import { Lock, LockOpen, Trash2 } from 'lucide-react';
+import { Lock, LockOpen, Trash2, Pin } from 'lucide-react';
 import type { NoteDecrypted } from '@safeink/shared';
 
 interface NoteCardRecentProps {
@@ -42,6 +42,11 @@ export default function NoteCardRecent({ note, onDelete, onUnlock }: NoteCardRec
       // Locking is instant
       updateNoteAsync(note.id, { locked: true });
     }
+  };
+
+  const handlePin = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    updateNoteAsync(note.id, { pinned: !note.pinned });
   };
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -97,6 +102,21 @@ export default function NoteCardRecent({ note, onDelete, onUnlock }: NoteCardRec
 
       {/* Actions */}
       <div className="flex items-center gap-1 flex-shrink-0">
+        <button
+          onClick={handlePin}
+          className="flex items-center justify-center transition-all"
+          title={note.pinned ? 'Unpin note' : 'Pin note'}
+          style={{
+            width: 30,
+            height: 30,
+            borderRadius: 15,
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          <Pin size={14} strokeWidth={1.5} style={{ color: note.pinned ? primaryText : tertiaryText, transform: note.pinned ? 'rotate(45deg)' : 'none' }} />
+        </button>
         <button
           onClick={handleLockToggle}
           className="flex items-center justify-center transition-all"

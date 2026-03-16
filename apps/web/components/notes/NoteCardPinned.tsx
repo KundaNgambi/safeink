@@ -41,6 +41,11 @@ export default function NoteCardPinned({ note, onDelete, onUnlock }: NoteCardPin
     }
   };
 
+  const handleUnpin = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    updateNoteAsync(note.id, { pinned: false });
+  };
+
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     onDelete(note);
@@ -58,10 +63,14 @@ export default function NoteCardPinned({ note, onDelete, onUnlock }: NoteCardPin
         position: 'relative',
       }}
     >
-      {/* Pin icon top-right */}
-      <div style={{ position: 'absolute', top: 12, right: 12 }}>
-        <Pin size={14} style={{ color: secondaryText }} />
-      </div>
+      {/* Unpin button top-right */}
+      <button
+        onClick={handleUnpin}
+        title="Unpin note"
+        style={{ position: 'absolute', top: 8, right: 8, background: 'transparent', border: 'none', cursor: 'pointer', padding: 4 }}
+      >
+        <Pin size={14} style={{ color: secondaryText, transform: 'rotate(45deg)' }} />
+      </button>
 
       {/* Category + Copy row */}
       <div className="flex items-center justify-between gap-2">
