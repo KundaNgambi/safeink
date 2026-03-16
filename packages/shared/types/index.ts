@@ -6,6 +6,7 @@ export interface Note {
   category_id: string | null;
   pinned: boolean;
   archived: boolean;
+  locked: boolean;
   deleted_at: string | null;
   created_at: string;
   updated_at: string;
@@ -19,6 +20,7 @@ export interface NoteDecrypted {
   category_id: string | null;
   pinned: boolean;
   archived: boolean;
+  locked: boolean;
   deleted_at: string | null;
   created_at: string;
   updated_at: string;

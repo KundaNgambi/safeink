@@ -1,16 +1,22 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useAppStore } from '@/store';
 import Logo from '@/components/common/Logo';
 import ThemeToggle from '@/components/common/ThemeToggle';
 import NoteCardPinned from './NoteCardPinned';
 import NoteCardRecent from './NoteCardRecent';
+import DeleteNoteModal from './DeleteNoteModal';
+import NoteUnlockModal from './NoteUnlockModal';
 import { Search, X, Lock } from 'lucide-react';
+import type { NoteDecrypted } from '@safeink/shared';
 
 export default function NotesScreen() {
-  const { theme, notes, categories, activeCategoryFilter, setActiveCategoryFilter, searchQuery, setSearchQuery, loading } = useAppStore();
+  const { theme, notes, categories, activeCategoryFilter, setActiveCategoryFilter, searchQuery, setSearchQuery, loading, deleteNoteAsync, setSelectedNoteId } = useAppStore();
   const isDark = theme === 'dark';
+
+  const [deletingNote, setDeletingNote] = useState<NoteDecrypted | null>(null);
+  const [unlockingNote, setUnlockingNote] = useState<NoteDecrypted | null>(null);
 
   const filteredNotes = useMemo(() => {
     let filtered = notes.filter((n) => !n.deleted_at && !n.archived);
@@ -45,6 +51,23 @@ export default function NotesScreen() {
   const primaryText = isDark ? '#E0E1DD' : '#1B263B';
   const cardBg = isDark ? '#243447' : '#FFFFFF';
   const cardBorder = isDark ? 'rgba(224,225,221,0.1)' : 'rgba(27,38,59,0.1)';
+
+  const handleDelete = (note: NoteDecrypted) => setDeletingNote(note);
+  const handleUnlock = (note: NoteDecrypted) => setUnlockingNote(note);
+
+  const confirmDelete = () => {
+    if (deletingNote) {
+      deleteNoteAsync(deletingNote.id);
+      setDeletingNote(null);
+    }
+  };
+
+  const confirmUnlock = () => {
+    if (unlockingNote) {
+      setSelectedNoteId(unlockingNote.id);
+      setUnlockingNote(null);
+    }
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -158,7 +181,7 @@ export default function NotesScreen() {
             </div>
             <div className="grid grid-cols-2 gap-3 mb-5">
               {pinnedNotes.map((note) => (
-                <NoteCardPinned key={note.id} note={note} />
+                <NoteCardPinned key={note.id} note={note} onDelete={handleDelete} onUnlock={handleUnlock} />
               ))}
             </div>
           </>
@@ -183,7 +206,7 @@ export default function NotesScreen() {
             </div>
             <div className="flex flex-col gap-3">
               {recentNotes.map((note) => (
-                <NoteCardRecent key={note.id} note={note} />
+                <NoteCardRecent key={note.id} note={note} onDelete={handleDelete} onUnlock={handleUnlock} />
               ))}
             </div>
           </>
@@ -207,6 +230,23 @@ export default function NotesScreen() {
           </div>
         )}
       </div>
+
+      {/* Delete confirmation modal */}
+      {deletingNote && (
+        <DeleteNoteModal
+          noteTitle={deletingNote.locked ? 'Locked note' : deletingNote.title}
+          onConfirm={confirmDelete}
+          onClose={() => setDeletingNote(null)}
+        />
+      )}
+
+      {/* Unlock modal for locked notes */}
+      {unlockingNote && (
+        <NoteUnlockModal
+          onUnlock={confirmUnlock}
+          onClose={() => setUnlockingNote(null)}
+        />
+      )}
     </div>
   );
 }

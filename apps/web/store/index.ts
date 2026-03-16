@@ -32,7 +32,7 @@ interface AppState {
   // Async note operations (Supabase + E2EE)
   loadNotes: () => Promise<void>;
   createNoteAsync: (title: string, body: string, categoryId: string | null) => Promise<NoteDecrypted | null>;
-  updateNoteAsync: (id: string, updates: Partial<Pick<NoteDecrypted, 'title' | 'body' | 'category_id' | 'pinned' | 'archived'>>) => Promise<void>;
+  updateNoteAsync: (id: string, updates: Partial<Pick<NoteDecrypted, 'title' | 'body' | 'category_id' | 'pinned' | 'archived' | 'locked'>>) => Promise<void>;
   deleteNoteAsync: (id: string) => Promise<void>;
 
   // Categories

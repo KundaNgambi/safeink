@@ -26,6 +26,7 @@ async function decryptNote(note: Note): Promise<NoteDecrypted> {
       category_id: note.category_id,
       pinned: note.pinned,
       archived: note.archived,
+      locked: note.locked ?? false,
       deleted_at: note.deleted_at,
       created_at: note.created_at,
       updated_at: note.updated_at,
@@ -40,6 +41,7 @@ async function decryptNote(note: Note): Promise<NoteDecrypted> {
       category_id: note.category_id,
       pinned: note.pinned,
       archived: note.archived,
+      locked: note.locked ?? false,
       deleted_at: note.deleted_at,
       created_at: note.created_at,
       updated_at: note.updated_at,
@@ -91,7 +93,7 @@ export async function createNote(title: string, body: string, categoryId: string
 
 export async function updateNote(
   id: string,
-  updates: Partial<Pick<NoteDecrypted, 'title' | 'body' | 'category_id' | 'pinned' | 'archived'>>
+  updates: Partial<Pick<NoteDecrypted, 'title' | 'body' | 'category_id' | 'pinned' | 'archived' | 'locked'>>
 ): Promise<NoteDecrypted> {
   const supabase = createClient();
   const key = await getEncryptionKey();
@@ -111,6 +113,9 @@ export async function updateNote(
   }
   if (updates.archived !== undefined) {
     dbUpdates.archived = updates.archived;
+  }
+  if (updates.locked !== undefined) {
+    dbUpdates.locked = updates.locked;
   }
 
   const { data, error } = await supabase

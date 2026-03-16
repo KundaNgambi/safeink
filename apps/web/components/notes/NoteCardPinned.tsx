@@ -2,15 +2,17 @@
 
 import { useAppStore } from '@/store';
 import CopyButton from '@/components/common/CopyButton';
-import { Pin, Lock, Check } from 'lucide-react';
+import { Pin, Lock, LockOpen, Trash2 } from 'lucide-react';
 import type { NoteDecrypted } from '@safeink/shared';
 
 interface NoteCardPinnedProps {
   note: NoteDecrypted;
+  onDelete: (note: NoteDecrypted) => void;
+  onUnlock: (note: NoteDecrypted) => void;
 }
 
-export default function NoteCardPinned({ note }: NoteCardPinnedProps) {
-  const { theme, setSelectedNoteId, categories } = useAppStore();
+export default function NoteCardPinned({ note, onDelete, onUnlock }: NoteCardPinnedProps) {
+  const { theme, setSelectedNoteId, categories, updateNoteAsync } = useAppStore();
   const isDark = theme === 'dark';
 
   const category = categories.find((c) => c.id === note.category_id);
@@ -22,9 +24,27 @@ export default function NoteCardPinned({ note }: NoteCardPinnedProps) {
   const cardBg = isDark ? '#243447' : '#FFFFFF';
   const cardBorder = isDark ? 'rgba(224,225,221,0.1)' : 'rgba(27,38,59,0.1)';
 
+  const handleClick = () => {
+    if (note.locked) {
+      onUnlock(note);
+    } else {
+      setSelectedNoteId(note.id);
+    }
+  };
+
+  const handleLockToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    updateNoteAsync(note.id, { locked: !note.locked });
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDelete(note);
+  };
+
   return (
     <div
-      onClick={() => setSelectedNoteId(note.id)}
+      onClick={handleClick}
       className="note-card cursor-pointer flex flex-col gap-3"
       style={{
         borderRadius: 20,
@@ -54,7 +74,7 @@ export default function NoteCardPinned({ note }: NoteCardPinnedProps) {
         ) : (
           <span />
         )}
-        <CopyButton text={`${note.title}\n\n${note.body}`} size="sm" />
+        {!note.locked && <CopyButton text={`${note.title}\n\n${note.body}`} size="sm" />}
       </div>
 
       {/* Title */}
@@ -62,7 +82,7 @@ export default function NoteCardPinned({ note }: NoteCardPinnedProps) {
         className="text-sm font-bold leading-tight line-clamp-2"
         style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: primaryText }}
       >
-        {note.title}
+        {note.locked ? '••••••••' : note.title}
       </h3>
 
       {/* Preview */}
@@ -70,7 +90,7 @@ export default function NoteCardPinned({ note }: NoteCardPinnedProps) {
         className="text-[11px] leading-relaxed line-clamp-2"
         style={{ color: secondaryText, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
       >
-        {note.body}
+        {note.locked ? '••••••••••••••••' : note.body}
       </p>
 
       {/* Footer */}
@@ -81,8 +101,41 @@ export default function NoteCardPinned({ note }: NoteCardPinnedProps) {
         >
           {timeAgo}
         </span>
-        <Lock size={10} style={{ color: tertiaryText }} />
-        <Check size={10} style={{ color: tertiaryText }} />
+        <div className="flex-1" />
+        <button
+          onClick={handleLockToggle}
+          className="flex items-center justify-center"
+          title={note.locked ? 'Unlock note' : 'Lock note'}
+          style={{
+            width: 26,
+            height: 26,
+            borderRadius: 13,
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          {note.locked ? (
+            <Lock size={12} strokeWidth={1.5} style={{ color: '#C45C6A' }} />
+          ) : (
+            <LockOpen size={12} strokeWidth={1.5} style={{ color: tertiaryText }} />
+          )}
+        </button>
+        <button
+          onClick={handleDelete}
+          className="flex items-center justify-center"
+          title="Delete note"
+          style={{
+            width: 26,
+            height: 26,
+            borderRadius: 13,
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          <Trash2 size={12} strokeWidth={1.5} style={{ color: tertiaryText }} />
+        </button>
       </div>
     </div>
   );

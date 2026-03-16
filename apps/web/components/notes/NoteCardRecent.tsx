@@ -1,16 +1,19 @@
 'use client';
 
+import { useState } from 'react';
 import { useAppStore } from '@/store';
 import CopyButton from '@/components/common/CopyButton';
-import { Lock } from 'lucide-react';
+import { Lock, LockOpen, Trash2 } from 'lucide-react';
 import type { NoteDecrypted } from '@safeink/shared';
 
 interface NoteCardRecentProps {
   note: NoteDecrypted;
+  onDelete: (note: NoteDecrypted) => void;
+  onUnlock: (note: NoteDecrypted) => void;
 }
 
-export default function NoteCardRecent({ note }: NoteCardRecentProps) {
-  const { theme, setSelectedNoteId, categories } = useAppStore();
+export default function NoteCardRecent({ note, onDelete, onUnlock }: NoteCardRecentProps) {
+  const { theme, setSelectedNoteId, categories, updateNoteAsync } = useAppStore();
   const isDark = theme === 'dark';
 
   const category = categories.find((c) => c.id === note.category_id);
@@ -22,9 +25,27 @@ export default function NoteCardRecent({ note }: NoteCardRecentProps) {
   const cardBg = isDark ? '#243447' : '#FFFFFF';
   const cardBorder = isDark ? 'rgba(224,225,221,0.1)' : 'rgba(27,38,59,0.1)';
 
+  const handleClick = () => {
+    if (note.locked) {
+      onUnlock(note);
+    } else {
+      setSelectedNoteId(note.id);
+    }
+  };
+
+  const handleLockToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    updateNoteAsync(note.id, { locked: !note.locked });
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDelete(note);
+  };
+
   return (
     <div
-      onClick={() => setSelectedNoteId(note.id)}
+      onClick={handleClick}
       className="note-card cursor-pointer flex items-center gap-3"
       style={{
         borderRadius: 20,
@@ -40,14 +61,14 @@ export default function NoteCardRecent({ note }: NoteCardRecentProps) {
             className="text-sm font-bold truncate"
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: primaryText }}
           >
-            {note.title}
+            {note.locked ? '••••••••' : note.title}
           </h3>
         </div>
         <p
           className="text-[11px] truncate mt-0.5"
           style={{ color: secondaryText, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
         >
-          {note.body}
+          {note.locked ? '••••••••••••••••' : note.body}
         </p>
         <div className="flex items-center gap-2 mt-1">
           <span
@@ -56,7 +77,7 @@ export default function NoteCardRecent({ note }: NoteCardRecentProps) {
           >
             {timeAgo}
           </span>
-          <Lock size={10} style={{ color: tertiaryText }} />
+          {note.locked && <Lock size={10} style={{ color: '#C45C6A' }} />}
           {category && (
             <span
               className="text-[10px] font-medium"
@@ -68,8 +89,44 @@ export default function NoteCardRecent({ note }: NoteCardRecentProps) {
         </div>
       </div>
 
-      {/* Copy button */}
-      <CopyButton text={`${note.title}\n\n${note.body}`} size="sm" />
+      {/* Actions */}
+      <div className="flex items-center gap-1 flex-shrink-0">
+        <button
+          onClick={handleLockToggle}
+          className="flex items-center justify-center transition-all"
+          title={note.locked ? 'Unlock note' : 'Lock note'}
+          style={{
+            width: 30,
+            height: 30,
+            borderRadius: 15,
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          {note.locked ? (
+            <Lock size={14} strokeWidth={1.5} style={{ color: '#C45C6A' }} />
+          ) : (
+            <LockOpen size={14} strokeWidth={1.5} style={{ color: tertiaryText }} />
+          )}
+        </button>
+        <button
+          onClick={handleDelete}
+          className="flex items-center justify-center transition-all"
+          title="Delete note"
+          style={{
+            width: 30,
+            height: 30,
+            borderRadius: 15,
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          <Trash2 size={14} strokeWidth={1.5} style={{ color: tertiaryText }} />
+        </button>
+        {!note.locked && <CopyButton text={`${note.title}\n\n${note.body}`} size="sm" />}
+      </div>
     </div>
   );
 }

@@ -56,6 +56,7 @@ const mockNote: NoteDecrypted = {
   category_id: null,
   pinned: false,
   archived: false,
+  locked: false,
   deleted_at: null,
   created_at: '2026-03-16T10:00:00Z',
   updated_at: '2026-03-16T10:00:00Z',

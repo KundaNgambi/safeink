@@ -16,6 +16,11 @@ export default function LockScreen() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [attempts, setAttempts] = useState(0);
+  const [lockedUntil, setLockedUntil] = useState<number | null>(null);
+
+  const MAX_ATTEMPTS = 5;
+  const LOCKOUT_SECONDS = 60;
 
   const primaryText = isDark ? '#E0E1DD' : '#1B263B';
   const secondaryText = isDark ? 'rgba(224,225,221,0.6)' : 'rgba(27,38,59,0.6)';
@@ -26,6 +31,13 @@ export default function LockScreen() {
 
   const handleUnlock = async () => {
     if (!password.trim() || !user?.email) return;
+
+    // Check lockout
+    if (lockedUntil && Date.now() < lockedUntil) {
+      const remaining = Math.ceil((lockedUntil - Date.now()) / 1000);
+      setError(`Too many attempts. Try again in ${remaining}s`);
+      return;
+    }
 
     setLoading(true);
     setError('');
@@ -38,7 +50,15 @@ export default function LockScreen() {
       });
 
       if (authError) {
-        setError('Incorrect password');
+        const newAttempts = attempts + 1;
+        setAttempts(newAttempts);
+        if (newAttempts >= MAX_ATTEMPTS) {
+          setLockedUntil(Date.now() + LOCKOUT_SECONDS * 1000);
+          setError(`Too many attempts. Locked for ${LOCKOUT_SECONDS}s`);
+          setAttempts(0);
+        } else {
+          setError(`Incorrect password (${MAX_ATTEMPTS - newAttempts} attempts left)`);
+        }
         setPassword('');
       } else {
         // Re-derive encryption key on unlock
