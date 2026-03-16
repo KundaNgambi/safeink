@@ -58,7 +58,7 @@ export default function LoginPage() {
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-center px-6"
-      style={{ backgroundColor: '#0f1117' }}
+      style={{ backgroundColor: '#0D1B2A' }}
     >
       <div className="w-full max-w-sm">
         {/* Logo */}
@@ -69,14 +69,14 @@ export default function LoginPage() {
               className="text-3xl font-[800]"
               style={{ fontFamily: 'var(--font-bricolage)' }}
             >
-              <span style={{ color: '#f0f1f4' }}>safe</span>
-              <span style={{ color: '#BEFF46' }}>ink</span>
+              <span style={{ color: '#F4A261' }}>O</span>
+              <span style={{ color: '#E0E1DD' }}>bscura</span>
             </h1>
             <p
               className="text-sm mt-1"
-              style={{ fontFamily: 'var(--font-manrope)', color: '#8b8fa3' }}
+              style={{ fontFamily: 'var(--font-manrope)', color: '#778DA9' }}
             >
-              Your thoughts, encrypted.
+              Hidden by design.
             </p>
           </div>
         </div>
@@ -86,7 +86,7 @@ export default function LoginPage() {
           <div>
             <label
               className="block text-xs font-semibold mb-2 uppercase tracking-wider"
-              style={{ fontFamily: 'var(--font-manrope)', color: '#8b8fa3' }}
+              style={{ fontFamily: 'var(--font-manrope)', color: '#778DA9' }}
             >
               Email
             </label>
@@ -97,8 +97,8 @@ export default function LoginPage() {
               placeholder="your@email.com"
               className="w-full px-4 py-3 rounded-xl text-sm bg-transparent outline-none transition-all focus:ring-2"
               style={{
-                border: '1px solid rgba(255,255,255,0.1)',
-                color: '#f0f1f4',
+                border: '1px solid rgba(119,141,169,0.2)',
+                color: '#E0E1DD',
                 fontFamily: 'var(--font-manrope)',
               }}
             />
@@ -107,7 +107,7 @@ export default function LoginPage() {
           <div>
             <label
               className="block text-xs font-semibold mb-2 uppercase tracking-wider"
-              style={{ fontFamily: 'var(--font-manrope)', color: '#8b8fa3' }}
+              style={{ fontFamily: 'var(--font-manrope)', color: '#778DA9' }}
             >
               Password
             </label>
@@ -118,15 +118,15 @@ export default function LoginPage() {
               placeholder="••••••••••••"
               className="w-full px-4 py-3 rounded-xl text-sm bg-transparent outline-none transition-all"
               style={{
-                border: '1px solid rgba(255,255,255,0.1)',
-                color: '#f0f1f4',
+                border: '1px solid rgba(119,141,169,0.2)',
+                color: '#E0E1DD',
                 fontFamily: 'var(--font-manrope)',
               }}
             />
           </div>
 
           {error && (
-            <p className="text-xs text-center" style={{ color: '#FF6B6B', fontFamily: 'var(--font-manrope)' }}>
+            <p className="text-xs text-center" style={{ color: '#E07A8E', fontFamily: 'var(--font-manrope)' }}>
               {error}
             </p>
           )}
@@ -136,8 +136,8 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-[1.02] active:scale-[0.98]"
             style={{
-              background: 'linear-gradient(135deg, #BEFF46, #9BD42A)',
-              color: '#0f1117',
+              background: 'linear-gradient(135deg, #F4A261, #E09049)',
+              color: '#0D1B2A',
               fontFamily: 'var(--font-manrope)',
               opacity: loading ? 0.7 : 1,
             }}
@@ -148,9 +148,9 @@ export default function LoginPage() {
 
         {/* Divider */}
         <div className="flex items-center gap-3 my-6">
-          <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }} />
-          <span className="text-xs" style={{ color: '#555a6e', fontFamily: 'var(--font-manrope)' }}>or continue with</span>
-          <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }} />
+          <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(119,141,169,0.12)' }} />
+          <span className="text-xs" style={{ color: '#415A77', fontFamily: 'var(--font-manrope)' }}>or continue with</span>
+          <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(119,141,169,0.12)' }} />
         </div>
 
         {/* OAuth */}
@@ -165,8 +165,8 @@ export default function LoginPage() {
               onClick={() => handleOAuth(provider)}
               className="flex-1 py-3 rounded-xl text-xs font-semibold transition-all hover:bg-white/5"
               style={{
-                border: '1px solid rgba(255,255,255,0.1)',
-                color: '#f0f1f4',
+                border: '1px solid rgba(119,141,169,0.2)',
+                color: '#E0E1DD',
                 fontFamily: 'var(--font-manrope)',
               }}
             >
@@ -176,9 +176,9 @@ export default function LoginPage() {
         </div>
 
         {/* Sign up link */}
-        <p className="text-center text-sm mt-8" style={{ color: '#8b8fa3', fontFamily: 'var(--font-manrope)' }}>
+        <p className="text-center text-sm mt-8" style={{ color: '#778DA9', fontFamily: 'var(--font-manrope)' }}>
           Don&apos;t have an account?{' '}
-          <a href="/signup" style={{ color: '#BEFF46' }} className="font-semibold hover:underline">
+          <a href="/signup" style={{ color: '#F4A261' }} className="font-semibold hover:underline">
             Sign Up
           </a>
         </p>

@@ -22,8 +22,8 @@ export default function NoteCardRecent({ note }: NoteCardRecentProps) {
       style={{
         borderRadius: 20,
         padding: '14px 16px',
-        backgroundColor: isDark ? 'rgba(26,30,42,0.85)' : 'rgba(255,255,255,0.9)',
-        border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
+        backgroundColor: isDark ? '#1B263B' : '#FFFFFF',
+        border: `1px solid ${isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)'}`,
         backdropFilter: 'blur(20px)',
       }}
     >
@@ -34,7 +34,7 @@ export default function NoteCardRecent({ note }: NoteCardRecentProps) {
           width: 42,
           height: 42,
           borderRadius: 14,
-          backgroundColor: category ? `${category.color}2e` : (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'),
+          backgroundColor: category ? `${category.color}2e` : (isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)'),
         }}
       >
         {category?.icon || '📝'}
@@ -45,7 +45,7 @@ export default function NoteCardRecent({ note }: NoteCardRecentProps) {
         <div className="flex items-center justify-between gap-2">
           <h3
             className="text-sm font-bold truncate"
-            style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#f0f1f4' : '#1a1c24' }}
+            style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#E0E1DD' : '#0D1B2A' }}
           >
             {note.title}
           </h3>
@@ -53,18 +53,18 @@ export default function NoteCardRecent({ note }: NoteCardRecentProps) {
         </div>
         <p
           className="text-[11px] truncate mt-0.5"
-          style={{ color: isDark ? '#8b8fa3' : '#6b7080', fontFamily: 'var(--font-manrope)' }}
+          style={{ color: isDark ? '#778DA9' : '#415A77', fontFamily: 'var(--font-manrope)' }}
         >
           {note.body}
         </p>
         <div className="flex items-center gap-2 mt-1">
           <span
             className="text-[10px]"
-            style={{ fontFamily: 'var(--font-jetbrains)', color: isDark ? '#555a6e' : '#9ca3af' }}
+            style={{ fontFamily: 'var(--font-jetbrains)', color: isDark ? '#415A77' : '#778DA9' }}
           >
             {timeAgo}
           </span>
-          <span className="text-[10px]" style={{ color: isDark ? '#555a6e' : '#9ca3af' }}>🔒</span>
+          <span className="text-[10px]" style={{ color: isDark ? '#415A77' : '#778DA9' }}>🔒</span>
           {category && (
             <span
               className="text-[10px] font-medium"

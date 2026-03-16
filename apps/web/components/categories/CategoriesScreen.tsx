@@ -17,7 +17,7 @@ export default function CategoriesScreen() {
     setActiveTab, setActiveCategoryFilter,
   } = useAppStore();
   const isDark = theme === 'dark';
-  const accent = isDark ? '#BEFF46' : '#4CAF50';
+  const accent = isDark ? '#F4A261' : '#E09049';
 
   const [dragOverId, setDragOverId] = useState<string | null>(null);
   const [dragId, setDragId] = useState<string | null>(null);
@@ -102,7 +102,7 @@ export default function CategoriesScreen() {
       <div className="px-5 pt-5 pb-4 flex items-center justify-between">
         <h1
           className="text-2xl font-[800]"
-          style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#f0f1f4' : '#1a1c24' }}
+          style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#E0E1DD' : '#0D1B2A' }}
         >
           Categories
         </h1>
@@ -141,13 +141,13 @@ export default function CategoriesScreen() {
             <span className="text-4xl mb-4">📂</span>
             <h3
               className="text-lg font-display font-bold mb-2"
-              style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#f0f1f4' : '#1a1c24' }}
+              style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#E0E1DD' : '#0D1B2A' }}
             >
               No categories yet
             </h3>
             <p
               className="text-sm font-body text-center"
-              style={{ color: isDark ? '#8b8fa3' : '#6b7080', fontFamily: 'var(--font-manrope)' }}
+              style={{ color: isDark ? '#778DA9' : '#415A77', fontFamily: 'var(--font-manrope)' }}
             >
               Create categories to organize your notes
             </p>

@@ -18,12 +18,12 @@ export default function FAB() {
         width: 56,
         height: 56,
         borderRadius: 18,
-        background: `linear-gradient(135deg, ${isDark ? '#BEFF46' : '#4CAF50'}, ${isDark ? '#9BD42A' : '#388E3C'})`,
+        background: `linear-gradient(135deg, ${isDark ? '#F4A261' : '#E09049'}, ${isDark ? '#E09049' : '#C47A38'})`,
       }}
     >
       <span
         className="text-2xl font-bold"
-        style={{ color: isDark ? '#0f1117' : '#ffffff' }}
+        style={{ color: isDark ? '#0D1B2A' : '#FFFFFF' }}
       >
         +
       </span>

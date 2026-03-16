@@ -8,11 +8,11 @@ export default function SettingsScreen() {
   const { theme, toggleTheme } = useAppStore();
   const { user, signOut } = useAuthStore();
   const isDark = theme === 'dark';
-  const accent = isDark ? '#BEFF46' : '#4CAF50';
-  const accentDark = isDark ? '#9BD42A' : '#388E3C';
+  const accent = isDark ? '#F4A261' : '#E09049';
+  const accentDark = isDark ? '#E09049' : '#C47A38';
 
   // Calculate real security score based on what's actually implemented
-  const hasE2EE = typeof window !== 'undefined' && !!sessionStorage.getItem('safeink_enc_key');
+  const hasE2EE = typeof window !== 'undefined' && !!sessionStorage.getItem('obscura_enc_key');
   const hasMfa = false; // Would need to check MFA factors
   const hasRls = true; // DB-level, always on
   const securityScore = [hasE2EE, hasMfa, hasRls].filter(Boolean).length * 33 + 1;
@@ -40,7 +40,7 @@ export default function SettingsScreen() {
       <div className="px-5 pt-5 pb-4">
         <h1
           className="text-2xl font-[800]"
-          style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#f0f1f4' : '#1a1c24' }}
+          style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#E0E1DD' : '#0D1B2A' }}
         >
           Settings
         </h1>
@@ -51,8 +51,8 @@ export default function SettingsScreen() {
         <div
           className="flex items-center gap-4 p-5 rounded-2xl glass-card"
           style={{
-            backgroundColor: isDark ? 'rgba(26,30,42,0.85)' : 'rgba(255,255,255,0.9)',
-            border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
+            backgroundColor: isDark ? '#1B263B' : '#FFFFFF',
+            border: `1px solid ${isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)'}`,
             backdropFilter: 'blur(20px)',
           }}
         >
@@ -64,7 +64,7 @@ export default function SettingsScreen() {
               height: 56,
               borderRadius: 18,
               background: `linear-gradient(135deg, ${accent}, ${accentDark})`,
-              color: isDark ? '#0f1117' : '#ffffff',
+              color: isDark ? '#0D1B2A' : '#FFFFFF',
               fontFamily: 'var(--font-bricolage)',
             }}
           >
@@ -73,13 +73,13 @@ export default function SettingsScreen() {
           <div className="flex-1 min-w-0">
             <h2
               className="text-base font-bold truncate"
-              style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#f0f1f4' : '#1a1c24' }}
+              style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#E0E1DD' : '#0D1B2A' }}
             >
               {user?.user_metadata?.full_name || 'User'}
             </h2>
             <p
               className="text-xs truncate"
-              style={{ fontFamily: 'var(--font-manrope)', color: isDark ? '#8b8fa3' : '#6b7080' }}
+              style={{ fontFamily: 'var(--font-manrope)', color: isDark ? '#778DA9' : '#415A77' }}
             >
               {user?.email || 'Not signed in'}
             </p>
@@ -94,7 +94,7 @@ export default function SettingsScreen() {
               PRO
             </span>
           </div>
-          <span style={{ color: isDark ? '#555a6e' : '#9ca3af', fontSize: 18 }}>›</span>
+          <span style={{ color: isDark ? '#415A77' : '#778DA9', fontSize: 18 }}>›</span>
         </div>
       </div>
 
@@ -102,15 +102,15 @@ export default function SettingsScreen() {
       <div className="px-5 mb-5">
         <h3
           className="text-[10px] font-body font-semibold uppercase tracking-widest mb-3 px-1"
-          style={{ color: isDark ? '#555a6e' : '#9ca3af', fontFamily: 'var(--font-manrope)' }}
+          style={{ color: isDark ? '#415A77' : '#778DA9', fontFamily: 'var(--font-manrope)' }}
         >
           General
         </h3>
         <div
           className="rounded-2xl overflow-hidden glass-card"
           style={{
-            backgroundColor: isDark ? 'rgba(26,30,42,0.85)' : 'rgba(255,255,255,0.9)',
-            border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
+            backgroundColor: isDark ? '#1B263B' : '#FFFFFF',
+            border: `1px solid ${isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)'}`,
             backdropFilter: 'blur(20px)',
           }}
         >
@@ -121,25 +121,25 @@ export default function SettingsScreen() {
               className="flex items-center gap-3 w-full px-4 py-3.5 text-left transition-colors hover:bg-white/5"
               style={{
                 borderBottom: i < generalItems.length - 1
-                  ? `1px solid ${isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'}`
+                  ? `1px solid ${isDark ? 'rgba(119,141,169,0.08)' : 'rgba(13,27,42,0.04)'}`
                   : 'none',
               }}
             >
               <span className="text-lg">{item.icon}</span>
               <span
                 className="flex-1 text-sm font-body font-medium"
-                style={{ fontFamily: 'var(--font-manrope)', color: isDark ? '#f0f1f4' : '#1a1c24' }}
+                style={{ fontFamily: 'var(--font-manrope)', color: isDark ? '#E0E1DD' : '#0D1B2A' }}
               >
                 {item.label}
               </span>
               <span
                 className="text-xs font-body"
-                style={{ fontFamily: 'var(--font-manrope)', color: isDark ? '#8b8fa3' : '#6b7080' }}
+                style={{ fontFamily: 'var(--font-manrope)', color: isDark ? '#778DA9' : '#415A77' }}
               >
                 {item.value}
               </span>
               {item.chevron && (
-                <span style={{ color: isDark ? '#555a6e' : '#9ca3af', fontSize: 14 }}>›</span>
+                <span style={{ color: isDark ? '#415A77' : '#778DA9', fontSize: 14 }}>›</span>
               )}
             </button>
           ))}
@@ -150,7 +150,7 @@ export default function SettingsScreen() {
       <div className="px-5 mb-5">
         <h3
           className="text-[10px] font-body font-semibold uppercase tracking-widest mb-3 px-1 flex items-center gap-1"
-          style={{ color: isDark ? '#555a6e' : '#9ca3af', fontFamily: 'var(--font-manrope)' }}
+          style={{ color: isDark ? '#415A77' : '#778DA9', fontFamily: 'var(--font-manrope)' }}
         >
           🛡️ Security
         </h3>
@@ -159,7 +159,7 @@ export default function SettingsScreen() {
         <div
           className="relative overflow-hidden rounded-2xl p-5 mb-3"
           style={{
-            background: `linear-gradient(135deg, ${accent}, ${accentDark})`,
+            background: 'linear-gradient(135deg, #1B263B, #0D1B2A)',
           }}
         >
           {/* Decorative circle */}
@@ -169,7 +169,7 @@ export default function SettingsScreen() {
               width: 120,
               height: 120,
               borderRadius: '50%',
-              border: `2px solid ${isDark ? 'rgba(15,17,23,0.15)' : 'rgba(255,255,255,0.2)'}`,
+              border: '2px solid rgba(244,162,97,0.08)',
               top: -20,
               right: -20,
             }}
@@ -177,19 +177,19 @@ export default function SettingsScreen() {
           <div className="relative z-10">
             <p
               className="text-xs font-body font-semibold mb-1"
-              style={{ color: isDark ? '#0f1117' : '#ffffff', fontFamily: 'var(--font-manrope)', opacity: 0.8 }}
+              style={{ color: '#778DA9', fontFamily: 'var(--font-manrope)' }}
             >
               Security Score
             </p>
             <p
               className="text-4xl font-display font-[800]"
-              style={{ color: isDark ? '#0f1117' : '#ffffff', fontFamily: 'var(--font-bricolage)' }}
+              style={{ color: '#E0E1DD', fontFamily: 'var(--font-bricolage)' }}
             >
-              {securityScore}/100
+              {securityScore}<span style={{ color: '#778DA9', fontSize: '1rem' }}>/100</span>
             </p>
             <p
               className="text-[10px] font-body mt-1"
-              style={{ color: isDark ? '#0f1117' : '#ffffff', fontFamily: 'var(--font-manrope)', opacity: 0.7 }}
+              style={{ color: '#778DA9', fontFamily: 'var(--font-manrope)' }}
             >
               {securityScore >= 80 ? 'Excellent' : securityScore >= 50 ? 'Good' : 'Needs Improvement'} — {securityScore >= 80 ? 'Core security features active' : 'Enable more security features'}
             </p>
@@ -200,8 +200,8 @@ export default function SettingsScreen() {
         <div
           className="rounded-2xl overflow-hidden glass-card"
           style={{
-            backgroundColor: isDark ? 'rgba(26,30,42,0.85)' : 'rgba(255,255,255,0.9)',
-            border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
+            backgroundColor: isDark ? '#1B263B' : '#FFFFFF',
+            border: `1px solid ${isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)'}`,
             backdropFilter: 'blur(20px)',
           }}
         >
@@ -211,7 +211,7 @@ export default function SettingsScreen() {
               className="flex items-center gap-3 px-4 py-3.5"
               style={{
                 borderBottom: i < securityFeatures.length - 1
-                  ? `1px solid ${isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'}`
+                  ? `1px solid ${isDark ? 'rgba(119,141,169,0.08)' : 'rgba(13,27,42,0.04)'}`
                   : 'none',
               }}
             >
@@ -229,7 +229,7 @@ export default function SettingsScreen() {
               <div className="flex-1">
                 <p
                   className="text-sm font-body font-medium"
-                  style={{ fontFamily: 'var(--font-manrope)', color: isDark ? '#f0f1f4' : '#1a1c24' }}
+                  style={{ fontFamily: 'var(--font-manrope)', color: isDark ? '#E0E1DD' : '#0D1B2A' }}
                 >
                   {feat.title}
                 </p>
@@ -237,8 +237,8 @@ export default function SettingsScreen() {
               <span
                 className="text-[10px] font-body font-semibold px-2 py-1 rounded-md"
                 style={{
-                  backgroundColor: feat.active ? `${accent}14` : 'rgba(255,107,107,0.1)',
-                  color: feat.active ? accent : '#FF6B6B',
+                  backgroundColor: feat.active ? `${accent}14` : 'rgba(224,122,142,0.1)',
+                  color: feat.active ? accent : '#E07A8E',
                   fontFamily: 'var(--font-manrope)',
                 }}
               >
@@ -255,8 +255,8 @@ export default function SettingsScreen() {
           onClick={() => signOut().then(() => { window.location.href = '/login'; })}
           className="w-full py-3.5 rounded-2xl text-sm font-bold transition-all hover:bg-red-500/10"
           style={{
-            border: '1px solid rgba(255,107,107,0.3)',
-            color: '#FF6B6B',
+            border: '1px solid rgba(224,122,142,0.3)',
+            color: '#E07A8E',
             fontFamily: 'var(--font-manrope)',
           }}
         >
@@ -269,9 +269,9 @@ export default function SettingsScreen() {
         <Logo size={32} showWordmark={false} />
         <p
           className="text-[10px]"
-          style={{ fontFamily: 'var(--font-jetbrains)', color: isDark ? '#555a6e' : '#9ca3af' }}
+          style={{ fontFamily: 'var(--font-jetbrains)', color: isDark ? '#415A77' : '#778DA9' }}
         >
-          Safeink v1.0.0
+          Obscura v1.0.0
         </p>
       </div>
     </div>

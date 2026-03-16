@@ -5,9 +5,10 @@
 /* Fonts loaded via link tag in layout for non-blocking loading */
 
 :root {
-  --font-bricolage: 'Bricolage Grotesque', sans-serif;
-  --font-manrope: 'Manrope', sans-serif;
+  --font-bricolage: 'Plus Jakarta Sans', sans-serif;
+  --font-manrope: 'Plus Jakarta Sans', sans-serif;
   --font-jetbrains: 'JetBrains Mono', monospace;
+  --font-serif: 'Newsreader', serif;
 }
 
 /* Hide all scrollbars globally */
@@ -34,14 +35,14 @@ body {
 
 /* Dark theme */
 body.dark {
-  background-color: #0f1117;
-  color: #f0f1f4;
+  background-color: #0D1B2A;
+  color: #E0E1DD;
 }
 
 /* Light theme */
 body.light {
-  background-color: #F4F5F7;
-  color: #1a1c24;
+  background-color: #F8F7F4;
+  color: #0D1B2A;
 }
 
 /* Glassmorphic card */
@@ -56,15 +57,15 @@ body.light {
 }
 
 body.dark {
-  --accent: #BEFF46;
-  --accent-dark: #9BD42A;
-  --accent-fg: #0f1117;
+  --accent: #F4A261;
+  --accent-dark: #E09049;
+  --accent-fg: #0D1B2A;
 }
 
 body.light {
-  --accent: #4CAF50;
-  --accent-dark: #388E3C;
-  --accent-fg: #ffffff;
+  --accent: #E09049;
+  --accent-dark: #C47A38;
+  --accent-fg: #FFFFFF;
 }
 
 /* Card hover */
@@ -79,7 +80,7 @@ body.light {
 
 /* Copy button animation */
 .copy-btn-glow {
-  box-shadow: 0 0 16px rgba(190, 255, 70, 0.4);
+  box-shadow: 0 0 16px rgba(244, 162, 97, 0.4);
 }
 
 /* Modal slide up */
@@ -124,18 +125,18 @@ body.light {
 
 /* FAB glow */
 .fab-glow {
-  box-shadow: 0 6px 24px rgba(190, 255, 70, 0.27);
+  box-shadow: 0 6px 24px rgba(244, 162, 97, 0.27);
 }
 
 body.light .fab-glow {
-  box-shadow: 0 6px 24px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 6px 24px rgba(224, 144, 73, 0.3);
 }
 
 /* Selection */
 ::selection {
-  background: rgba(190, 255, 70, 0.3);
+  background: rgba(244, 162, 97, 0.3);
 }
 
 body.light ::selection {
-  background: rgba(76, 175, 80, 0.3);
+  background: rgba(224, 144, 73, 0.3);
 }

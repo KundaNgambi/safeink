@@ -64,7 +64,7 @@ export default function SignupPage() {
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-center px-6 py-10"
-      style={{ backgroundColor: '#0f1117' }}
+      style={{ backgroundColor: '#0D1B2A' }}
     >
       <div className="w-full max-w-sm">
         {/* Logo */}
@@ -74,7 +74,7 @@ export default function SignupPage() {
 
         <h2
           className="text-xl font-[800] text-center mb-6"
-          style={{ fontFamily: 'var(--font-bricolage)', color: '#f0f1f4' }}
+          style={{ fontFamily: 'var(--font-bricolage)', color: '#E0E1DD' }}
         >
           Create your account
         </h2>
@@ -92,8 +92,8 @@ export default function SignupPage() {
                   key={check.label}
                   className="text-[10px] px-2 py-1 rounded-md font-semibold"
                   style={{
-                    backgroundColor: check.pass ? '#BEFF4620' : '#FF6B6B20',
-                    color: check.pass ? '#BEFF46' : '#FF6B6B',
+                    backgroundColor: check.pass ? '#F4A26120' : '#E07A8E20',
+                    color: check.pass ? '#F4A261' : '#E07A8E',
                     fontFamily: 'var(--font-manrope)',
                   }}
                 >
@@ -106,19 +106,19 @@ export default function SignupPage() {
           <InputField label="Confirm Password" type="password" value={confirmPassword} onChange={setConfirmPassword} placeholder="Re-enter password" />
 
           {password && confirmPassword && password !== confirmPassword && (
-            <p className="text-[10px]" style={{ color: '#FF6B6B', fontFamily: 'var(--font-manrope)' }}>
+            <p className="text-[10px]" style={{ color: '#E07A8E', fontFamily: 'var(--font-manrope)' }}>
               Passwords do not match
             </p>
           )}
 
           {error && (
-            <p className="text-xs text-center" style={{ color: '#FF6B6B', fontFamily: 'var(--font-manrope)' }}>
+            <p className="text-xs text-center" style={{ color: '#E07A8E', fontFamily: 'var(--font-manrope)' }}>
               {error}
             </p>
           )}
 
           {success && (
-            <p className="text-xs text-center" style={{ color: '#BEFF46', fontFamily: 'var(--font-manrope)' }}>
+            <p className="text-xs text-center" style={{ color: '#F4A261', fontFamily: 'var(--font-manrope)' }}>
               {success}
             </p>
           )}
@@ -128,8 +128,8 @@ export default function SignupPage() {
             disabled={!allValid || loading}
             className="w-full py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-[1.02] active:scale-[0.98]"
             style={{
-              background: allValid ? 'linear-gradient(135deg, #BEFF46, #9BD42A)' : 'rgba(190,255,70,0.2)',
-              color: allValid ? '#0f1117' : '#BEFF4666',
+              background: allValid ? 'linear-gradient(135deg, #F4A261, #E09049)' : 'rgba(244,162,97,0.2)',
+              color: allValid ? '#0D1B2A' : '#F4A26166',
               fontFamily: 'var(--font-manrope)',
               opacity: loading ? 0.7 : 1,
             }}
@@ -138,9 +138,9 @@ export default function SignupPage() {
           </button>
         </form>
 
-        <p className="text-center text-sm mt-6" style={{ color: '#8b8fa3', fontFamily: 'var(--font-manrope)' }}>
+        <p className="text-center text-sm mt-6" style={{ color: '#778DA9', fontFamily: 'var(--font-manrope)' }}>
           Already have an account?{' '}
-          <a href="/login" style={{ color: '#BEFF46' }} className="font-semibold hover:underline">
+          <a href="/login" style={{ color: '#F4A261' }} className="font-semibold hover:underline">
             Sign In
           </a>
         </p>
@@ -158,7 +158,7 @@ function InputField({
     <div>
       <label
         className="block text-xs font-semibold mb-2 uppercase tracking-wider"
-        style={{ fontFamily: 'var(--font-manrope)', color: '#8b8fa3' }}
+        style={{ fontFamily: 'var(--font-manrope)', color: '#778DA9' }}
       >
         {label}
       </label>
@@ -169,8 +169,8 @@ function InputField({
         placeholder={placeholder}
         className="w-full px-4 py-3 rounded-xl text-sm bg-transparent outline-none transition-all"
         style={{
-          border: '1px solid rgba(255,255,255,0.1)',
-          color: '#f0f1f4',
+          border: '1px solid rgba(119,141,169,0.2)',
+          color: '#E0E1DD',
           fontFamily: 'var(--font-manrope)',
         }}
       />

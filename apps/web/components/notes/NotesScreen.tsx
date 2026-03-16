@@ -10,7 +10,7 @@ import NoteCardRecent from './NoteCardRecent';
 export default function NotesScreen() {
   const { theme, notes, categories, activeCategoryFilter, setActiveCategoryFilter, searchQuery, setSearchQuery, loading } = useAppStore();
   const isDark = theme === 'dark';
-  const accent = isDark ? '#BEFF46' : '#4CAF50';
+  const accent = isDark ? '#F4A261' : '#E09049';
 
   const filteredNotes = useMemo(() => {
     let filtered = notes.filter((n) => !n.deleted_at && !n.archived);
@@ -53,11 +53,11 @@ export default function NotesScreen() {
         <div
           className="flex items-center gap-3 px-4 py-3 rounded-2xl"
           style={{
-            backgroundColor: isDark ? 'rgba(26,30,42,0.85)' : 'rgba(255,255,255,0.9)',
-            border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
+            backgroundColor: isDark ? '#1B263B' : '#FFFFFF',
+            border: `1px solid ${isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)'}`,
           }}
         >
-          <span style={{ color: isDark ? '#555a6e' : '#9ca3af' }}>🔍</span>
+          <span style={{ color: isDark ? '#415A77' : '#778DA9' }}>🔍</span>
           <input
             type="text"
             value={searchQuery}
@@ -65,12 +65,12 @@ export default function NotesScreen() {
             placeholder="Search encrypted notes..."
             className="flex-1 bg-transparent outline-none text-sm font-body"
             style={{
-              color: isDark ? '#f0f1f4' : '#1a1c24',
+              color: isDark ? '#E0E1DD' : '#0D1B2A',
               fontFamily: 'var(--font-manrope)',
             }}
           />
           {searchQuery && (
-            <button onClick={() => setSearchQuery('')} style={{ color: isDark ? '#8b8fa3' : '#6b7080' }}>
+            <button onClick={() => setSearchQuery('')} style={{ color: isDark ? '#778DA9' : '#415A77' }}>
               ✕
             </button>
           )}
@@ -84,8 +84,8 @@ export default function NotesScreen() {
           className="flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-body font-semibold transition-all"
           style={{
             backgroundColor: !activeCategoryFilter ? `${accent}20` : 'transparent',
-            color: !activeCategoryFilter ? accent : (isDark ? '#8b8fa3' : '#6b7080'),
-            border: `1px solid ${!activeCategoryFilter ? `${accent}40` : (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)')}`,
+            color: !activeCategoryFilter ? accent : (isDark ? '#778DA9' : '#415A77'),
+            border: `1px solid ${!activeCategoryFilter ? `${accent}40` : (isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)')}`,
             fontFamily: 'var(--font-manrope)',
           }}
         >
@@ -100,8 +100,8 @@ export default function NotesScreen() {
               className="flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-body font-semibold transition-all whitespace-nowrap"
               style={{
                 backgroundColor: isActive ? `${cat.color}33` : 'transparent',
-                color: isActive ? cat.color : (isDark ? '#8b8fa3' : '#6b7080'),
-                border: `1px solid ${isActive ? `${cat.color}66` : (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)')}`,
+                color: isActive ? cat.color : (isDark ? '#778DA9' : '#415A77'),
+                border: `1px solid ${isActive ? `${cat.color}66` : (isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)')}`,
                 fontFamily: 'var(--font-manrope)',
               }}
             >
@@ -121,13 +121,13 @@ export default function NotesScreen() {
                 key={i}
                 className="rounded-2xl p-4 animate-pulse"
                 style={{
-                  backgroundColor: isDark ? 'rgba(26,30,42,0.85)' : 'rgba(255,255,255,0.9)',
-                  border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
+                  backgroundColor: isDark ? '#1B263B' : '#FFFFFF',
+                  border: `1px solid ${isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)'}`,
                 }}
               >
-                <div className="h-4 rounded-lg mb-3" style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)', width: '60%' }} />
-                <div className="h-3 rounded-lg mb-2" style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)', width: '100%' }} />
-                <div className="h-3 rounded-lg" style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)', width: '75%' }} />
+                <div className="h-4 rounded-lg mb-3" style={{ backgroundColor: isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)', width: '60%' }} />
+                <div className="h-3 rounded-lg mb-2" style={{ backgroundColor: isDark ? 'rgba(119,141,169,0.08)' : 'rgba(13,27,42,0.04)', width: '100%' }} />
+                <div className="h-3 rounded-lg" style={{ backgroundColor: isDark ? 'rgba(119,141,169,0.08)' : 'rgba(13,27,42,0.04)', width: '75%' }} />
               </div>
             ))}
           </div>
@@ -137,7 +137,7 @@ export default function NotesScreen() {
         {!loading && pinnedNotes.length > 0 && (
           <>
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs font-body font-semibold uppercase tracking-wider" style={{ color: isDark ? '#555a6e' : '#9ca3af', fontFamily: 'var(--font-manrope)' }}>
+              <span className="text-xs font-body font-semibold uppercase tracking-wider" style={{ color: isDark ? '#415A77' : '#778DA9', fontFamily: 'var(--font-manrope)' }}>
                 📌 Pinned
               </span>
             </div>
@@ -153,7 +153,7 @@ export default function NotesScreen() {
         {!loading && recentNotes.length > 0 && (
           <>
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs font-body font-semibold uppercase tracking-wider" style={{ color: isDark ? '#555a6e' : '#9ca3af', fontFamily: 'var(--font-manrope)' }}>
+              <span className="text-xs font-body font-semibold uppercase tracking-wider" style={{ color: isDark ? '#415A77' : '#778DA9', fontFamily: 'var(--font-manrope)' }}>
                 Recent
               </span>
             </div>
@@ -170,13 +170,13 @@ export default function NotesScreen() {
             <span className="text-4xl mb-4">🔐</span>
             <h3
               className="text-lg font-display font-bold mb-2"
-              style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#f0f1f4' : '#1a1c24' }}
+              style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#E0E1DD' : '#0D1B2A' }}
             >
               {searchQuery ? 'No notes found' : 'No notes yet'}
             </h3>
             <p
               className="text-sm font-body text-center"
-              style={{ color: isDark ? '#8b8fa3' : '#6b7080', fontFamily: 'var(--font-manrope)' }}
+              style={{ color: isDark ? '#778DA9' : '#415A77', fontFamily: 'var(--font-manrope)' }}
             >
               {searchQuery ? 'Try a different search term' : 'Tap + to create your first encrypted note'}
             </p>

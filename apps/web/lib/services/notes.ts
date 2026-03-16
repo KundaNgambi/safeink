@@ -7,14 +7,14 @@ async function getEncryptionKey(): Promise<CryptoKey> {
   // In production, this should use PBKDF2 with the user's master password.
   const { generateEncryptionKey, exportKey, importKey } = await import('@safeink/shared');
 
-  const stored = sessionStorage.getItem('safeink_enc_key');
+  const stored = sessionStorage.getItem('obscura_enc_key');
   if (stored) {
     return importKey(stored);
   }
 
   const key = await generateEncryptionKey();
   const exported = await exportKey(key);
-  sessionStorage.setItem('safeink_enc_key', exported);
+  sessionStorage.setItem('obscura_enc_key', exported);
   return key;
 }
 

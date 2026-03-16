@@ -12,9 +12,9 @@ export default function Logo({ size = 56, showWordmark = true, showTagline = fal
   const theme = useAppStore((s) => s.theme);
   const isDark = theme === 'dark';
 
-  const accent = isDark ? '#BEFF46' : '#4CAF50';
-  const bg = isDark ? '#0f1117' : '#ffffff';
-  const textColor = isDark ? '#f0f1f4' : '#1a1c24';
+  const accent = isDark ? '#F4A261' : '#E09049';
+  const bg = isDark ? '#0D1B2A' : '#F8F7F4';
+  const textColor = isDark ? '#E0E1DD' : '#0D1B2A';
   const radius = Math.round((16 / 56) * size);
   const badgeSize = Math.round(size * 0.39);
   const fontSize = Math.round(size * 0.55);
@@ -25,17 +25,17 @@ export default function Logo({ size = 56, showWordmark = true, showTagline = fal
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
         {/* Rounded square background */}
         <rect width={size} height={size} rx={radius} fill={accent} />
-        {/* S letterform */}
+        {/* O letterform */}
         <text
           x={size / 2}
           y={size / 2 + fontSize * 0.35}
           textAnchor="middle"
-          fontFamily="'Bricolage Grotesque', sans-serif"
+          fontFamily="'Plus Jakarta Sans', sans-serif"
           fontWeight={800}
           fontSize={fontSize}
           fill={bg}
         >
-          S
+          O
         </text>
         {/* Lock badge */}
         <g transform={`translate(${size - badgeSize * 0.7}, ${size - badgeSize * 0.7})`}>
@@ -82,15 +82,15 @@ export default function Logo({ size = 56, showWordmark = true, showTagline = fal
             className="font-display font-[800] text-xl leading-tight tracking-tight"
             style={{ fontFamily: 'var(--font-bricolage)' }}
           >
-            <span style={{ color: textColor }}>safe</span>
-            <span style={{ color: accent }}>ink</span>
+            <span style={{ color: accent }}>O</span>
+            <span style={{ color: textColor }}>bscura</span>
           </span>
           {showTagline && (
             <span
               className="text-xs font-body"
-              style={{ color: isDark ? '#8b8fa3' : '#6b7080', fontFamily: 'var(--font-manrope)' }}
+              style={{ color: isDark ? '#778DA9' : '#415A77', fontFamily: 'var(--font-manrope)' }}
             >
-              Your thoughts, encrypted.
+              Hidden by design.
             </span>
           )}
         </div>

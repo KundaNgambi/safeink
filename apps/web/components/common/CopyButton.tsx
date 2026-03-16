@@ -12,7 +12,7 @@ export default function CopyButton({ text, size = 'sm' }: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
   const theme = useAppStore((s) => s.theme);
   const isDark = theme === 'dark';
-  const accent = isDark ? '#BEFF46' : '#4CAF50';
+  const accent = isDark ? '#F4A261' : '#E09049';
 
   const handleCopy = useCallback(
     (e: React.MouseEvent) => {
@@ -36,7 +36,7 @@ export default function CopyButton({ text, size = 'sm' }: CopyButtonProps) {
         fontSize,
         fontFamily: 'var(--font-manrope)',
         backgroundColor: copied ? accent : `${accent}14`,
-        color: copied ? (isDark ? '#0f1117' : '#ffffff') : accent,
+        color: copied ? (isDark ? '#0D1B2A' : '#FFFFFF') : accent,
         border: `1px solid ${copied ? accent : `${accent}33`}`,
         transform: copied ? 'scale(1.05)' : 'scale(1)',
         boxShadow: copied ? `0 0 16px ${accent}66` : 'none',

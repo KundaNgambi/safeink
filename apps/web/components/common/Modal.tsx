@@ -46,7 +46,7 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
       <div
         className="relative w-full max-w-lg max-h-[85vh] overflow-auto modal-slide-up"
         style={{
-          backgroundColor: isDark ? '#0f1117' : '#F4F5F7',
+          backgroundColor: isDark ? '#0D1B2A' : '#F8F7F4',
           borderRadius: '28px 28px 0 0',
         }}
       >
@@ -57,7 +57,7 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
             style={{
               width: 40,
               height: 4,
-              backgroundColor: isDark ? '#555a6e' : '#9ca3af',
+              backgroundColor: isDark ? '#415A77' : '#778DA9',
             }}
           />
         </div>
@@ -65,7 +65,7 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
         <div className="flex items-center justify-between px-6 py-3">
           <h2
             className="text-xl font-[800]"
-            style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#f0f1f4' : '#1a1c24' }}
+            style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#E0E1DD' : '#0D1B2A' }}
           >
             {title}
           </h2>
@@ -76,8 +76,8 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
               width: 36,
               height: 36,
               borderRadius: '50%',
-              backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
-              color: isDark ? '#8b8fa3' : '#6b7080',
+              backgroundColor: isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)',
+              color: isDark ? '#778DA9' : '#415A77',
             }}
           >
             ✕

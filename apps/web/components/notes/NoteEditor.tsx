@@ -31,29 +31,29 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
     onSave(title.trim(), body, categoryId);
   };
 
-  const accent = isDark ? '#BEFF46' : '#4CAF50';
-  const accentFg = isDark ? '#0f1117' : '#ffffff';
+  const accent = isDark ? '#F4A261' : '#E09049';
+  const accentFg = isDark ? '#0D1B2A' : '#FFFFFF';
 
   return (
     <div
       className="fixed inset-0 z-50 flex flex-col fade-in"
-      style={{ backgroundColor: isDark ? '#0f1117' : '#F4F5F7' }}
+      style={{ backgroundColor: isDark ? '#0D1B2A' : '#F8F7F4' }}
     >
       {/* Header */}
       <div
         className="flex items-center justify-between px-5 py-4"
-        style={{ borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}` }}
+        style={{ borderBottom: `1px solid ${isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)'}` }}
       >
         <button
           onClick={onClose}
           className="text-sm font-body font-semibold px-3 py-1.5 rounded-lg"
-          style={{ color: isDark ? '#8b8fa3' : '#6b7080' }}
+          style={{ color: isDark ? '#778DA9' : '#415A77' }}
         >
           Cancel
         </button>
         <span
           className="text-sm font-display font-bold"
-          style={{ color: isDark ? '#f0f1f4' : '#1a1c24', fontFamily: 'var(--font-bricolage)' }}
+          style={{ color: isDark ? '#E0E1DD' : '#0D1B2A', fontFamily: 'var(--font-bricolage)' }}
         >
           {note ? 'Edit Note' : 'New Note'}
         </span>
@@ -72,15 +72,15 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
       {/* Category selector */}
       <div
         className="flex items-center gap-2 px-5 py-3 overflow-x-auto"
-        style={{ borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'}` }}
+        style={{ borderBottom: `1px solid ${isDark ? 'rgba(119,141,169,0.08)' : 'rgba(13,27,42,0.04)'}` }}
       >
         <button
           onClick={() => setCategoryId(null)}
           className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-body font-semibold transition-all"
           style={{
             backgroundColor: !categoryId ? `${accent}20` : 'transparent',
-            color: !categoryId ? accent : (isDark ? '#8b8fa3' : '#6b7080'),
-            border: `1px solid ${!categoryId ? `${accent}40` : (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)')}`,
+            color: !categoryId ? accent : (isDark ? '#778DA9' : '#415A77'),
+            border: `1px solid ${!categoryId ? `${accent}40` : (isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)')}`,
           }}
         >
           No Category
@@ -92,8 +92,8 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
             className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-body font-semibold transition-all"
             style={{
               backgroundColor: categoryId === cat.id ? `${cat.color}33` : 'transparent',
-              color: categoryId === cat.id ? cat.color : (isDark ? '#8b8fa3' : '#6b7080'),
-              border: `1px solid ${categoryId === cat.id ? `${cat.color}66` : (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)')}`,
+              color: categoryId === cat.id ? cat.color : (isDark ? '#778DA9' : '#415A77'),
+              border: `1px solid ${categoryId === cat.id ? `${cat.color}66` : (isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)')}`,
             }}
           >
             {cat.icon} {cat.name}
@@ -111,7 +111,7 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
           className="w-full text-xl font-display font-bold bg-transparent outline-none mb-4"
           style={{
             fontFamily: 'var(--font-bricolage)',
-            color: isDark ? '#f0f1f4' : '#1a1c24',
+            color: isDark ? '#E0E1DD' : '#0D1B2A',
           }}
           autoFocus
         />
@@ -122,7 +122,7 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
           className="w-full flex-1 bg-transparent outline-none resize-none text-sm leading-relaxed font-body"
           style={{
             fontFamily: 'var(--font-manrope)',
-            color: isDark ? '#f0f1f4' : '#1a1c24',
+            color: isDark ? '#E0E1DD' : '#0D1B2A',
             minHeight: 400,
           }}
         />
@@ -132,15 +132,15 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
       <div
         className="flex items-center gap-1 px-5 py-3"
         style={{
-          borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
-          backgroundColor: isDark ? 'rgba(18,20,30,0.9)' : 'rgba(255,255,255,0.9)',
+          borderTop: `1px solid ${isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)'}`,
+          backgroundColor: isDark ? 'rgba(13,27,42,0.95)' : 'rgba(248,247,244,0.95)',
         }}
       >
         {['B', 'I', 'U', 'S', 'H1', 'H2', '≡', '☑', '<>', '🔗', '📎'].map((btn) => (
           <button
             key={btn}
             className="flex items-center justify-center w-8 h-8 rounded-lg text-xs font-bold transition-colors hover:bg-white/5"
-            style={{ color: isDark ? '#8b8fa3' : '#6b7080' }}
+            style={{ color: isDark ? '#778DA9' : '#415A77' }}
           >
             {btn}
           </button>

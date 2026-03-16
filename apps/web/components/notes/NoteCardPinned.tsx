@@ -22,8 +22,8 @@ export default function NoteCardPinned({ note }: NoteCardPinnedProps) {
       style={{
         borderRadius: 20,
         padding: 16,
-        backgroundColor: isDark ? 'rgba(26,30,42,0.85)' : 'rgba(255,255,255,0.9)',
-        border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
+        backgroundColor: isDark ? '#1B263B' : '#FFFFFF',
+        border: `1px solid ${isDark ? 'rgba(119,141,169,0.15)' : 'rgba(13,27,42,0.08)'}`,
         backdropFilter: 'blur(20px)',
       }}
     >
@@ -49,7 +49,7 @@ export default function NoteCardPinned({ note }: NoteCardPinnedProps) {
       {/* Title */}
       <h3
         className="text-sm font-bold leading-tight line-clamp-2"
-        style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#f0f1f4' : '#1a1c24' }}
+        style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#E0E1DD' : '#0D1B2A' }}
       >
         {note.title}
       </h3>
@@ -57,7 +57,7 @@ export default function NoteCardPinned({ note }: NoteCardPinnedProps) {
       {/* Preview */}
       <p
         className="text-[11px] leading-relaxed line-clamp-2"
-        style={{ color: isDark ? '#8b8fa3' : '#6b7080', fontFamily: 'var(--font-manrope)' }}
+        style={{ color: isDark ? '#778DA9' : '#415A77', fontFamily: 'var(--font-manrope)' }}
       >
         {note.body}
       </p>
@@ -66,12 +66,12 @@ export default function NoteCardPinned({ note }: NoteCardPinnedProps) {
       <div className="flex items-center gap-2 mt-auto">
         <span
           className="text-[10px]"
-          style={{ fontFamily: 'var(--font-jetbrains)', color: isDark ? '#555a6e' : '#9ca3af' }}
+          style={{ fontFamily: 'var(--font-jetbrains)', color: isDark ? '#415A77' : '#778DA9' }}
         >
           {timeAgo}
         </span>
-        <span className="text-[10px]" style={{ color: isDark ? '#555a6e' : '#9ca3af' }}>🔒</span>
-        <span className="text-[10px]" style={{ color: isDark ? '#BEFF46' : '#4CAF50' }}>●</span>
+        <span className="text-[10px]" style={{ color: isDark ? '#415A77' : '#778DA9' }}>🔒</span>
+        <span className="text-[10px]" style={{ color: isDark ? '#F4A261' : '#E09049' }}>●</span>
       </div>
     </div>
   );

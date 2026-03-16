@@ -3,8 +3,8 @@ import './globals.css';
 import AuthProvider from '@/components/providers/AuthProvider';
 
 export const metadata: Metadata = {
-  title: 'Safeink — Your thoughts, encrypted.',
-  description: 'Cross-platform encrypted notes application with end-to-end encryption.',
+  title: 'Obscura — Hidden by design.',
+  description: 'Cross-platform encrypted notes application, hidden by design.',
   icons: { icon: '/favicon.ico' },
 };
 
@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link
-          href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap"
           rel="stylesheet"
         />
       </head>
