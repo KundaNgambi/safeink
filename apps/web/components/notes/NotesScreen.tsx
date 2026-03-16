@@ -12,11 +12,11 @@ import { Search, X, Lock } from 'lucide-react';
 import type { NoteDecrypted } from '@safeink/shared';
 
 export default function NotesScreen() {
-  const { theme, notes, categories, activeCategoryFilter, setActiveCategoryFilter, searchQuery, setSearchQuery, loading, deleteNoteAsync, setSelectedNoteId } = useAppStore();
+  const { theme, notes, categories, activeCategoryFilter, setActiveCategoryFilter, searchQuery, setSearchQuery, loading, deleteNoteAsync, updateNoteAsync, setSelectedNoteId } = useAppStore();
   const isDark = theme === 'dark';
-
   const [deletingNote, setDeletingNote] = useState<NoteDecrypted | null>(null);
   const [unlockingNote, setUnlockingNote] = useState<NoteDecrypted | null>(null);
+  const [unlockAction, setUnlockAction] = useState<'view' | 'toggle'>('view');
 
   const filteredNotes = useMemo(() => {
     let filtered = notes.filter((n) => !n.deleted_at && !n.archived);
@@ -53,7 +53,10 @@ export default function NotesScreen() {
   const cardBorder = isDark ? 'rgba(224,225,221,0.1)' : 'rgba(27,38,59,0.1)';
 
   const handleDelete = (note: NoteDecrypted) => setDeletingNote(note);
-  const handleUnlock = (note: NoteDecrypted) => setUnlockingNote(note);
+  const handleUnlock = (note: NoteDecrypted, action: 'view' | 'toggle') => {
+    setUnlockingNote(note);
+    setUnlockAction(action);
+  };
 
   const confirmDelete = () => {
     if (deletingNote) {
@@ -64,7 +67,12 @@ export default function NotesScreen() {
 
   const confirmUnlock = () => {
     if (unlockingNote) {
-      setSelectedNoteId(unlockingNote.id);
+      if (unlockAction === 'view') {
+        setSelectedNoteId(unlockingNote.id);
+      } else {
+        // Toggle: remove lock after password verified
+        updateNoteAsync(unlockingNote.id, { locked: false });
+      }
       setUnlockingNote(null);
     }
   };

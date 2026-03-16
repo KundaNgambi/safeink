@@ -8,7 +8,7 @@ import type { NoteDecrypted } from '@safeink/shared';
 interface NoteCardPinnedProps {
   note: NoteDecrypted;
   onDelete: (note: NoteDecrypted) => void;
-  onUnlock: (note: NoteDecrypted) => void;
+  onUnlock: (note: NoteDecrypted, action: 'view' | 'toggle') => void;
 }
 
 export default function NoteCardPinned({ note, onDelete, onUnlock }: NoteCardPinnedProps) {
@@ -26,7 +26,7 @@ export default function NoteCardPinned({ note, onDelete, onUnlock }: NoteCardPin
 
   const handleClick = () => {
     if (note.locked) {
-      onUnlock(note);
+      onUnlock(note, 'view');
     } else {
       setSelectedNoteId(note.id);
     }
@@ -34,7 +34,11 @@ export default function NoteCardPinned({ note, onDelete, onUnlock }: NoteCardPin
 
   const handleLockToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
-    updateNoteAsync(note.id, { locked: !note.locked });
+    if (note.locked) {
+      onUnlock(note, 'toggle');
+    } else {
+      updateNoteAsync(note.id, { locked: true });
+    }
   };
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -82,7 +86,7 @@ export default function NoteCardPinned({ note, onDelete, onUnlock }: NoteCardPin
         className="text-sm font-bold leading-tight line-clamp-2"
         style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: primaryText }}
       >
-        {note.locked ? '••••••••' : note.title}
+        {note.title}
       </h3>
 
       {/* Preview */}

@@ -9,7 +9,7 @@ import type { NoteDecrypted } from '@safeink/shared';
 interface NoteCardRecentProps {
   note: NoteDecrypted;
   onDelete: (note: NoteDecrypted) => void;
-  onUnlock: (note: NoteDecrypted) => void;
+  onUnlock: (note: NoteDecrypted, action: 'view' | 'toggle') => void;
 }
 
 export default function NoteCardRecent({ note, onDelete, onUnlock }: NoteCardRecentProps) {
@@ -27,7 +27,7 @@ export default function NoteCardRecent({ note, onDelete, onUnlock }: NoteCardRec
 
   const handleClick = () => {
     if (note.locked) {
-      onUnlock(note);
+      onUnlock(note, 'view');
     } else {
       setSelectedNoteId(note.id);
     }
@@ -35,7 +35,13 @@ export default function NoteCardRecent({ note, onDelete, onUnlock }: NoteCardRec
 
   const handleLockToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
-    updateNoteAsync(note.id, { locked: !note.locked });
+    if (note.locked) {
+      // Unlocking requires password
+      onUnlock(note, 'toggle');
+    } else {
+      // Locking is instant
+      updateNoteAsync(note.id, { locked: true });
+    }
   };
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -61,7 +67,7 @@ export default function NoteCardRecent({ note, onDelete, onUnlock }: NoteCardRec
             className="text-sm font-bold truncate"
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: primaryText }}
           >
-            {note.locked ? '••••••••' : note.title}
+            {note.title}
           </h3>
         </div>
         <p
