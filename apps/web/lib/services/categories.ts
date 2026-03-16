@@ -20,6 +20,9 @@ export async function createCategory(
 ): Promise<Category> {
   const supabase = createClient();
 
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Not authenticated');
+
   // Get next sort_order
   const { data: existing } = await supabase
     .from('categories')
@@ -32,6 +35,7 @@ export async function createCategory(
   const { data, error } = await supabase
     .from('categories')
     .insert({
+      user_id: user.id,
       name,
       icon,
       color,
