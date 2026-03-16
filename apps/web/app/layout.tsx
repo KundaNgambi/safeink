@@ -1,11 +1,26 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import AuthProvider from '@/components/providers/AuthProvider';
+import ServiceWorkerRegistration from '@/components/providers/ServiceWorker';
+
+export const viewport: Viewport = {
+  themeColor: '#1B263B',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export const metadata: Metadata = {
   title: 'Obscura — Hidden by design.',
   description: 'Cross-platform encrypted notes application, hidden by design.',
-  icons: { icon: '/favicon.ico' },
+  icons: { icon: '/icons/icon-192.png', apple: '/icons/icon-512.png' },
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Obscura',
+  },
 };
 
 export default function RootLayout({
@@ -25,6 +40,7 @@ export default function RootLayout({
         <AuthProvider>
           {children}
         </AuthProvider>
+        <ServiceWorkerRegistration />
       </body>
     </html>
   );
