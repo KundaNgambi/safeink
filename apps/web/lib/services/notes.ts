@@ -15,17 +15,6 @@ async function getEncryptionKey(): Promise<CryptoKey> {
   return importKey(stored);
 }
 
-async function validateCategoryId(categoryId: string | null): Promise<string | null> {
-  if (!categoryId) return null;
-  const supabase = createClient();
-  const { data } = await supabase
-    .from('categories')
-    .select('id')
-    .eq('id', categoryId)
-    .single();
-  return data ? categoryId : null;
-}
-
 async function decryptNote(note: Note): Promise<NoteDecrypted> {
   try {
     const key = await getEncryptionKey();
@@ -85,15 +74,13 @@ export async function createNote(title: string, body: string, categoryId: string
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('Not authenticated');
 
-  const validCategoryId = await validateCategoryId(categoryId);
-
   const { data, error } = await supabase
     .from('notes')
     .insert({
       user_id: user.id,
       title_encrypted,
       body_encrypted,
-      category_id: validCategoryId,
+      category_id: categoryId || null,
       pinned: false,
       archived: false,
     })
@@ -106,7 +93,8 @@ export async function createNote(title: string, body: string, categoryId: string
 
 export async function updateNote(
   id: string,
-  updates: Partial<Pick<NoteDecrypted, 'title' | 'body' | 'category_id' | 'pinned' | 'archived' | 'locked'>>
+  updates: Partial<Pick<NoteDecrypted, 'title' | 'body' | 'category_id' | 'pinned' | 'archived' | 'locked'>>,
+  expectedUpdatedAt?: string
 ): Promise<NoteDecrypted> {
   const supabase = createClient();
   const key = await getEncryptionKey();
@@ -119,7 +107,7 @@ export async function updateNote(
     dbUpdates.body_encrypted = await encrypt(updates.body, key);
   }
   if (updates.category_id !== undefined) {
-    dbUpdates.category_id = await validateCategoryId(updates.category_id);
+    dbUpdates.category_id = updates.category_id || null;
   }
   if (updates.pinned !== undefined) {
     dbUpdates.pinned = updates.pinned;
@@ -131,14 +119,25 @@ export async function updateNote(
     dbUpdates.locked = updates.locked;
   }
 
-  const { data, error } = await supabase
+  let query = supabase
     .from('notes')
     .update(dbUpdates)
-    .eq('id', id)
-    .select()
-    .single();
+    .eq('id', id);
 
-  if (error) throw error;
+  // Conflict detection: only update if note hasn't been modified since we loaded it
+  if (expectedUpdatedAt) {
+    query = query.eq('updated_at', expectedUpdatedAt);
+  }
+
+  const { data, error } = await query.select().single();
+
+  if (error) {
+    // If no rows matched, another device updated the note
+    if (error.code === 'PGRST116' && expectedUpdatedAt) {
+      throw new Error('This note was modified on another device. Please refresh to see the latest version.');
+    }
+    throw error;
+  }
   return decryptNote(data);
 }
 

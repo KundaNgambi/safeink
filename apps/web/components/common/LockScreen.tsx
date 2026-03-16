@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client';
 import Logo from '@/components/common/Logo';
 import { Lock, Eye, EyeOff } from 'lucide-react';
 import { setupEncryptionOnLogin } from '@/lib/services/encryption';
+import { fetchNotes } from '@/lib/services/notes';
 
 interface LockScreenProps {
   onKeyDerived?: () => void;
@@ -68,6 +69,20 @@ export default function LockScreen({ onKeyDerived }: LockScreenProps) {
       } else {
         // Re-derive encryption key on unlock
         await setupEncryptionOnLogin(password);
+
+        // Verify key works by trying to decrypt existing notes
+        try {
+          const notes = await fetchNotes();
+          const hasUndecryptable = notes.some((n) => n.title === '[Encrypted — unable to decrypt]');
+          if (hasUndecryptable && notes.length > 0) {
+            setError('Encryption key mismatch — some notes cannot be decrypted. Try signing out and back in.');
+            setPassword('');
+            return;
+          }
+        } catch {
+          // If fetch fails, proceed anyway — network issues shouldn't block unlock
+        }
+
         setLocked(false);
         setPassword('');
         onKeyDerived?.();

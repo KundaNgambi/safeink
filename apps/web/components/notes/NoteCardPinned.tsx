@@ -78,7 +78,7 @@ export default function NoteCardPinned({ note, onDelete, onUnlock }: NoteCardPin
         ) : (
           <span />
         )}
-        {!note.locked && <CopyButton text={`${note.title}\n\n${note.body}`} size="sm" />}
+        {!note.locked && <CopyButton text={`${note.title}\n\n${stripHtml(note.body)}`} size="sm" />}
       </div>
 
       {/* Title */}

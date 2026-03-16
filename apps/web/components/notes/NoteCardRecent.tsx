@@ -131,7 +131,7 @@ export default function NoteCardRecent({ note, onDelete, onUnlock }: NoteCardRec
         >
           <Trash2 size={14} strokeWidth={1.5} style={{ color: tertiaryText }} />
         </button>
-        {!note.locked && <CopyButton text={`${note.title}\n\n${note.body}`} size="sm" />}
+        {!note.locked && <CopyButton text={`${note.title}\n\n${stripHtml(note.body)}`} size="sm" />}
       </div>
     </div>
   );

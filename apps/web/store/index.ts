@@ -127,19 +127,26 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   updateNoteAsync: async (id, updates) => {
-    // Optimistic update
-    const prev = get().notes;
+    // Optimistic update — capture only the affected note for rollback
+    const prevNote = get().notes.find((n) => n.id === id);
     set((state) => ({
       notes: state.notes.map((n) => (n.id === id ? { ...n, ...updates } : n)),
     }));
     try {
-      const updated = await notesService.updateNote(id, updates);
+      const updated = await notesService.updateNote(id, updates, prevNote?.updated_at);
       set((state) => ({
         notes: state.notes.map((n) => (n.id === id ? updated : n)),
       }));
     } catch (err) {
-      // Rollback on error
-      set({ notes: prev, error: (err as Error).message });
+      // Rollback only the affected note, preserving other concurrent changes
+      if (prevNote) {
+        set((state) => ({
+          notes: state.notes.map((n) => (n.id === id ? prevNote : n)),
+          error: (err as Error).message,
+        }));
+      } else {
+        set({ error: (err as Error).message });
+      }
     }
   },
 
@@ -194,7 +201,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   updateCategoryAsync: async (id, updates) => {
-    const prev = get().categories;
+    const prevCat = get().categories.find((c) => c.id === id);
     set((state) => ({
       categories: state.categories.map((c) => (c.id === id ? { ...c, ...updates } : c)),
     }));
@@ -204,7 +211,14 @@ export const useAppStore = create<AppState>((set, get) => ({
         categories: state.categories.map((c) => (c.id === id ? updated : c)),
       }));
     } catch (err) {
-      set({ categories: prev, error: (err as Error).message });
+      if (prevCat) {
+        set((state) => ({
+          categories: state.categories.map((c) => (c.id === id ? prevCat : c)),
+          error: (err as Error).message,
+        }));
+      } else {
+        set({ error: (err as Error).message });
+      }
     }
   },
 

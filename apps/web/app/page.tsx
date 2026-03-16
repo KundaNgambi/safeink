@@ -12,6 +12,8 @@ import SettingsScreen from '@/components/settings/SettingsScreen';
 import Toast from '@/components/common/Toast';
 import AutoLockProvider from '@/components/providers/AutoLock';
 import LockScreen from '@/components/common/LockScreen';
+import EncryptionSetup from '@/components/common/EncryptionSetup';
+import { setupEncryptionOnLogin, setupEncryptionOnSignup } from '@/lib/services/encryption';
 
 export default function AppPage() {
   const {
@@ -27,6 +29,20 @@ export default function AppPage() {
     if (typeof window === 'undefined') return false;
     return !sessionStorage.getItem('obscura_enc_key');
   });
+
+  // Auto-derive encryption key from pending password (after email confirmation or MFA)
+  useEffect(() => {
+    if (!user || !needsEncryptionKey) return;
+    const pendingPw = sessionStorage.getItem('obscura_pending_pw');
+    if (!pendingPw) return;
+
+    sessionStorage.removeItem('obscura_pending_pw');
+    const hasSalt = !!user.user_metadata?.encryption_salt;
+    const derive = hasSalt
+      ? setupEncryptionOnLogin(pendingPw)
+      : setupEncryptionOnSignup(pendingPw);
+    derive.then(() => setNeedsEncryptionKey(false)).catch(() => {});
+  }, [user, needsEncryptionKey]);
 
   // Load data from Supabase when user is authenticated and has encryption key
   useEffect(() => {
@@ -60,12 +76,16 @@ export default function AppPage() {
         className="h-screen w-screen overflow-hidden flex flex-col"
         style={{ backgroundColor: isDark ? '#1B263B' : '#E0E1DD' }}
       >
-        {/* Lock screen overlay — also shown when encryption key is missing */}
-        {(isLocked || (user && needsEncryptionKey)) && (
-          <LockScreen onKeyDerived={() => {
-            setNeedsEncryptionKey(false);
-          }} />
-        )}
+        {/* Lock/encryption overlay */}
+        {(isLocked || (user && needsEncryptionKey)) && (() => {
+          const isOAuth = user?.app_metadata?.provider && user.app_metadata.provider !== 'email';
+          // OAuth users without encryption key → show encryption setup
+          if (needsEncryptionKey && isOAuth && !isLocked) {
+            return <EncryptionSetup onComplete={() => setNeedsEncryptionKey(false)} />;
+          }
+          // All other cases (locked, or email user needs key) → lock screen
+          return <LockScreen onKeyDerived={() => setNeedsEncryptionKey(false)} />;
+        })()}
 
         {/* Main content */}
         <div className="flex-1 overflow-hidden">

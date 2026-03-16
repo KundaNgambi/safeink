@@ -7,6 +7,7 @@ import {
   CheckSquare, Code, Link, List, ListOrdered, Paperclip,
 } from 'lucide-react';
 import type { NoteDecrypted } from '@safeink/shared';
+import { sanitizeHtml } from '@/lib/utils/sanitize';
 
 interface NoteEditorProps {
   note?: NoteDecrypted;
@@ -50,11 +51,11 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
       const bodyContent = note?.body || '';
       // If body contains HTML tags, set as HTML; otherwise convert plain text
       if (bodyContent.includes('<') && bodyContent.includes('>')) {
-        editorRef.current.innerHTML = bodyContent;
+        editorRef.current.innerHTML = sanitizeHtml(bodyContent);
       } else {
         editorRef.current.innerHTML = bodyContent
           .split('\n')
-          .map((line) => (line ? `<div>${line}</div>` : '<div><br></div>'))
+          .map((line) => (line ? `<div>${sanitizeHtml(line)}</div>` : '<div><br></div>'))
           .join('');
       }
       initializedRef.current = true;
