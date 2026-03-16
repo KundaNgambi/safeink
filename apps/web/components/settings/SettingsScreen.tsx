@@ -1,0 +1,258 @@
+'use client';
+
+import { useAppStore } from '@/store';
+import Logo from '@/components/common/Logo';
+
+export default function SettingsScreen() {
+  const { theme, toggleTheme } = useAppStore();
+  const isDark = theme === 'dark';
+  const accent = isDark ? '#BEFF46' : '#4CAF50';
+  const accentDark = isDark ? '#9BD42A' : '#388E3C';
+
+  const securityScore = 98;
+
+  const generalItems = [
+    { icon: '🌐', label: 'Language', value: 'English', chevron: true },
+    { icon: '🔔', label: 'Notifications', value: 'On', chevron: true },
+    { icon: '💾', label: 'Auto-save', value: 'Enabled', chevron: true },
+    { icon: '☁️', label: 'Sync', value: 'Real-time', chevron: true },
+    { icon: isDark ? '🌙' : '☀️', label: 'Theme', value: isDark ? 'Dark' : 'Light', chevron: true, onClick: toggleTheme },
+  ];
+
+  const securityFeatures = [
+    { icon: '🔐', title: 'End-to-End Encryption', status: 'Active', active: true },
+    { icon: '🛡️', title: 'Two-Factor Authentication', status: 'Enabled', active: true },
+    { icon: '🔑', title: 'Biometric Unlock', status: 'Available', active: true },
+    { icon: '📋', title: 'Clipboard Protection', status: 'Active', active: true },
+    { icon: '📸', title: 'Screenshot Prevention', status: 'Active', active: true },
+    { icon: '🔄', title: 'Auto-Lock', status: '5 minutes', active: true },
+  ];
+
+  return (
+    <div className="flex flex-col h-full overflow-auto pb-24">
+      {/* Header */}
+      <div className="px-5 pt-5 pb-4">
+        <h1
+          className="text-2xl font-[800]"
+          style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#f0f1f4' : '#1a1c24' }}
+        >
+          Settings
+        </h1>
+      </div>
+
+      {/* Account card */}
+      <div className="px-5 mb-5">
+        <div
+          className="flex items-center gap-4 p-5 rounded-2xl glass-card"
+          style={{
+            backgroundColor: isDark ? 'rgba(26,30,42,0.85)' : 'rgba(255,255,255,0.9)',
+            border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
+            backdropFilter: 'blur(20px)',
+          }}
+        >
+          {/* Avatar */}
+          <div
+            className="flex-shrink-0 flex items-center justify-center text-xl font-display font-bold"
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: 18,
+              background: `linear-gradient(135deg, ${accent}, ${accentDark})`,
+              color: isDark ? '#0f1117' : '#ffffff',
+              fontFamily: 'var(--font-bricolage)',
+            }}
+          >
+            U
+          </div>
+          <div className="flex-1 min-w-0">
+            <h2
+              className="text-base font-bold truncate"
+              style={{ fontFamily: 'var(--font-bricolage)', color: isDark ? '#f0f1f4' : '#1a1c24' }}
+            >
+              Demo User
+            </h2>
+            <p
+              className="text-xs truncate"
+              style={{ fontFamily: 'var(--font-manrope)', color: isDark ? '#8b8fa3' : '#6b7080' }}
+            >
+              user@safeink.app
+            </p>
+            <span
+              className="inline-block mt-1 px-2 py-0.5 rounded-md text-[10px] font-bold"
+              style={{
+                backgroundColor: `${accent}20`,
+                color: accent,
+                fontFamily: 'var(--font-manrope)',
+              }}
+            >
+              PRO
+            </span>
+          </div>
+          <span style={{ color: isDark ? '#555a6e' : '#9ca3af', fontSize: 18 }}>›</span>
+        </div>
+      </div>
+
+      {/* General settings */}
+      <div className="px-5 mb-5">
+        <h3
+          className="text-[10px] font-body font-semibold uppercase tracking-widest mb-3 px-1"
+          style={{ color: isDark ? '#555a6e' : '#9ca3af', fontFamily: 'var(--font-manrope)' }}
+        >
+          General
+        </h3>
+        <div
+          className="rounded-2xl overflow-hidden glass-card"
+          style={{
+            backgroundColor: isDark ? 'rgba(26,30,42,0.85)' : 'rgba(255,255,255,0.9)',
+            border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
+            backdropFilter: 'blur(20px)',
+          }}
+        >
+          {generalItems.map((item, i) => (
+            <button
+              key={item.label}
+              onClick={item.onClick}
+              className="flex items-center gap-3 w-full px-4 py-3.5 text-left transition-colors hover:bg-white/5"
+              style={{
+                borderBottom: i < generalItems.length - 1
+                  ? `1px solid ${isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'}`
+                  : 'none',
+              }}
+            >
+              <span className="text-lg">{item.icon}</span>
+              <span
+                className="flex-1 text-sm font-body font-medium"
+                style={{ fontFamily: 'var(--font-manrope)', color: isDark ? '#f0f1f4' : '#1a1c24' }}
+              >
+                {item.label}
+              </span>
+              <span
+                className="text-xs font-body"
+                style={{ fontFamily: 'var(--font-manrope)', color: isDark ? '#8b8fa3' : '#6b7080' }}
+              >
+                {item.value}
+              </span>
+              {item.chevron && (
+                <span style={{ color: isDark ? '#555a6e' : '#9ca3af', fontSize: 14 }}>›</span>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Security section */}
+      <div className="px-5 mb-5">
+        <h3
+          className="text-[10px] font-body font-semibold uppercase tracking-widest mb-3 px-1 flex items-center gap-1"
+          style={{ color: isDark ? '#555a6e' : '#9ca3af', fontFamily: 'var(--font-manrope)' }}
+        >
+          🛡️ Security
+        </h3>
+
+        {/* Security score */}
+        <div
+          className="relative overflow-hidden rounded-2xl p-5 mb-3"
+          style={{
+            background: `linear-gradient(135deg, ${accent}, ${accentDark})`,
+          }}
+        >
+          {/* Decorative circle */}
+          <div
+            className="absolute"
+            style={{
+              width: 120,
+              height: 120,
+              borderRadius: '50%',
+              border: `2px solid ${isDark ? 'rgba(15,17,23,0.15)' : 'rgba(255,255,255,0.2)'}`,
+              top: -20,
+              right: -20,
+            }}
+          />
+          <div className="relative z-10">
+            <p
+              className="text-xs font-body font-semibold mb-1"
+              style={{ color: isDark ? '#0f1117' : '#ffffff', fontFamily: 'var(--font-manrope)', opacity: 0.8 }}
+            >
+              Security Score
+            </p>
+            <p
+              className="text-4xl font-display font-[800]"
+              style={{ color: isDark ? '#0f1117' : '#ffffff', fontFamily: 'var(--font-bricolage)' }}
+            >
+              {securityScore}/100
+            </p>
+            <p
+              className="text-[10px] font-body mt-1"
+              style={{ color: isDark ? '#0f1117' : '#ffffff', fontFamily: 'var(--font-manrope)', opacity: 0.7 }}
+            >
+              Excellent — All security features active
+            </p>
+          </div>
+        </div>
+
+        {/* Security features */}
+        <div
+          className="rounded-2xl overflow-hidden glass-card"
+          style={{
+            backgroundColor: isDark ? 'rgba(26,30,42,0.85)' : 'rgba(255,255,255,0.9)',
+            border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
+            backdropFilter: 'blur(20px)',
+          }}
+        >
+          {securityFeatures.map((feat, i) => (
+            <div
+              key={feat.title}
+              className="flex items-center gap-3 px-4 py-3.5"
+              style={{
+                borderBottom: i < securityFeatures.length - 1
+                  ? `1px solid ${isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'}`
+                  : 'none',
+              }}
+            >
+              <div
+                className="flex items-center justify-center text-base flex-shrink-0"
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 10,
+                  backgroundColor: `${accent}14`,
+                }}
+              >
+                {feat.icon}
+              </div>
+              <div className="flex-1">
+                <p
+                  className="text-sm font-body font-medium"
+                  style={{ fontFamily: 'var(--font-manrope)', color: isDark ? '#f0f1f4' : '#1a1c24' }}
+                >
+                  {feat.title}
+                </p>
+              </div>
+              <span
+                className="text-[10px] font-body font-semibold px-2 py-1 rounded-md"
+                style={{
+                  backgroundColor: `${accent}14`,
+                  color: accent,
+                  fontFamily: 'var(--font-manrope)',
+                }}
+              >
+                {feat.status}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* App info */}
+      <div className="px-5 pb-8 flex flex-col items-center gap-2">
+        <Logo size={32} showWordmark={false} />
+        <p
+          className="text-[10px]"
+          style={{ fontFamily: 'var(--font-jetbrains)', color: isDark ? '#555a6e' : '#9ca3af' }}
+        >
+          Safeink v1.0.0
+        </p>
+      </div>
+    </div>
+  );
+}
