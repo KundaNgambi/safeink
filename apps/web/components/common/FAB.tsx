@@ -14,7 +14,8 @@ export default function FAB() {
       className="fixed z-40 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 fab-glow"
       style={{
         bottom: 88,
-        right: 20,
+        left: '50%',
+        transform: 'translateX(-50%)',
         width: 56,
         height: 56,
         borderRadius: 18,
