@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppStore } from '@/store';
 import { useAuthStore } from '@/store/auth';
 import BottomNav from '@/components/common/BottomNav';
@@ -23,14 +23,23 @@ export default function AppPage() {
     isLocked,
   } = useAppStore();
   const user = useAuthStore((s) => s.user);
+  const [needsEncryptionKey, setNeedsEncryptionKey] = useState(false);
 
-  // Load data from Supabase when user is authenticated
+  // Check if encryption key exists when user is authenticated
   useEffect(() => {
     if (user) {
+      const hasKey = !!sessionStorage.getItem('obscura_enc_key');
+      setNeedsEncryptionKey(!hasKey);
+    }
+  }, [user]);
+
+  // Load data from Supabase when user is authenticated and has encryption key
+  useEffect(() => {
+    if (user && !needsEncryptionKey) {
       loadNotes();
       loadCategories();
     }
-  }, [user, loadNotes, loadCategories]);
+  }, [user, needsEncryptionKey, loadNotes, loadCategories]);
 
   // Sync theme to body
   useEffect(() => {
@@ -56,8 +65,12 @@ export default function AppPage() {
         className="h-screen w-screen overflow-hidden flex flex-col"
         style={{ backgroundColor: isDark ? '#1B263B' : '#E0E1DD' }}
       >
-        {/* Lock screen overlay */}
-        {isLocked && <LockScreen />}
+        {/* Lock screen overlay — also shown when encryption key is missing */}
+        {(isLocked || needsEncryptionKey) && (
+          <LockScreen onKeyDerived={() => {
+            setNeedsEncryptionKey(false);
+          }} />
+        )}
 
         {/* Main content */}
         <div className="flex-1 overflow-hidden">

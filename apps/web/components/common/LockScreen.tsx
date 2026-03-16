@@ -8,7 +8,11 @@ import Logo from '@/components/common/Logo';
 import { Lock, Eye, EyeOff } from 'lucide-react';
 import { setupEncryptionOnLogin } from '@/lib/services/encryption';
 
-export default function LockScreen() {
+interface LockScreenProps {
+  onKeyDerived?: () => void;
+}
+
+export default function LockScreen({ onKeyDerived }: LockScreenProps) {
   const { theme, setLocked } = useAppStore();
   const { user, signOut } = useAuthStore();
   const isDark = theme === 'dark';
@@ -66,6 +70,7 @@ export default function LockScreen() {
         await setupEncryptionOnLogin(password);
         setLocked(false);
         setPassword('');
+        onKeyDerived?.();
       }
     } catch {
       setError('Something went wrong');
