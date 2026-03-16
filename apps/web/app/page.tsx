@@ -23,15 +23,10 @@ export default function AppPage() {
     isLocked,
   } = useAppStore();
   const user = useAuthStore((s) => s.user);
-  const [needsEncryptionKey, setNeedsEncryptionKey] = useState(false);
-
-  // Check if encryption key exists when user is authenticated
-  useEffect(() => {
-    if (user) {
-      const hasKey = !!sessionStorage.getItem('obscura_enc_key');
-      setNeedsEncryptionKey(!hasKey);
-    }
-  }, [user]);
+  const [needsEncryptionKey, setNeedsEncryptionKey] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return !sessionStorage.getItem('obscura_enc_key');
+  });
 
   // Load data from Supabase when user is authenticated and has encryption key
   useEffect(() => {
@@ -66,7 +61,7 @@ export default function AppPage() {
         style={{ backgroundColor: isDark ? '#1B263B' : '#E0E1DD' }}
       >
         {/* Lock screen overlay — also shown when encryption key is missing */}
-        {(isLocked || needsEncryptionKey) && (
+        {(isLocked || (user && needsEncryptionKey)) && (
           <LockScreen onKeyDerived={() => {
             setNeedsEncryptionKey(false);
           }} />
