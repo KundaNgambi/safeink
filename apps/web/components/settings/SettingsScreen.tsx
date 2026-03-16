@@ -12,7 +12,7 @@ export default function SettingsScreen() {
   const accentDark = isDark ? '#9BD42A' : '#388E3C';
 
   // Calculate real security score based on what's actually implemented
-  const hasE2EE = !!sessionStorage.getItem('safeink_enc_key');
+  const hasE2EE = typeof window !== 'undefined' && !!sessionStorage.getItem('safeink_enc_key');
   const hasMfa = false; // Would need to check MFA factors
   const hasRls = true; // DB-level, always on
   const securityScore = [hasE2EE, hasMfa, hasRls].filter(Boolean).length * 33 + 1;

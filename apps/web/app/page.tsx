@@ -9,6 +9,7 @@ import NotesScreen from '@/components/notes/NotesScreen';
 import NoteEditor from '@/components/notes/NoteEditor';
 import CategoriesScreen from '@/components/categories/CategoriesScreen';
 import SettingsScreen from '@/components/settings/SettingsScreen';
+import Toast from '@/components/common/Toast';
 
 export default function AppPage() {
   const {
@@ -63,6 +64,9 @@ export default function AppPage() {
 
       {/* FAB */}
       <FAB />
+
+      {/* Error toast */}
+      <Toast />
 
       {/* Note editor overlay */}
       {(showCreateNote || selectedNoteId) && (

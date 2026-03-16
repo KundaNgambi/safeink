@@ -8,7 +8,7 @@ import NoteCardPinned from './NoteCardPinned';
 import NoteCardRecent from './NoteCardRecent';
 
 export default function NotesScreen() {
-  const { theme, notes, categories, activeCategoryFilter, setActiveCategoryFilter, searchQuery, setSearchQuery } = useAppStore();
+  const { theme, notes, categories, activeCategoryFilter, setActiveCategoryFilter, searchQuery, setSearchQuery, loading } = useAppStore();
   const isDark = theme === 'dark';
   const accent = isDark ? '#BEFF46' : '#4CAF50';
 
@@ -113,8 +113,28 @@ export default function NotesScreen() {
 
       {/* Notes list */}
       <div className="flex-1 overflow-auto px-5 pb-24">
+        {/* Loading skeleton */}
+        {loading && notes.length === 0 && (
+          <div className="flex flex-col gap-3">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="rounded-2xl p-4 animate-pulse"
+                style={{
+                  backgroundColor: isDark ? 'rgba(26,30,42,0.85)' : 'rgba(255,255,255,0.9)',
+                  border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
+                }}
+              >
+                <div className="h-4 rounded-lg mb-3" style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)', width: '60%' }} />
+                <div className="h-3 rounded-lg mb-2" style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)', width: '100%' }} />
+                <div className="h-3 rounded-lg" style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)', width: '75%' }} />
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Pinned section */}
-        {pinnedNotes.length > 0 && (
+        {!loading && pinnedNotes.length > 0 && (
           <>
             <div className="flex items-center gap-2 mb-3">
               <span className="text-xs font-body font-semibold uppercase tracking-wider" style={{ color: isDark ? '#555a6e' : '#9ca3af', fontFamily: 'var(--font-manrope)' }}>
@@ -130,7 +150,7 @@ export default function NotesScreen() {
         )}
 
         {/* Recent section */}
-        {recentNotes.length > 0 && (
+        {!loading && recentNotes.length > 0 && (
           <>
             <div className="flex items-center gap-2 mb-3">
               <span className="text-xs font-body font-semibold uppercase tracking-wider" style={{ color: isDark ? '#555a6e' : '#9ca3af', fontFamily: 'var(--font-manrope)' }}>
@@ -145,7 +165,7 @@ export default function NotesScreen() {
           </>
         )}
 
-        {filteredNotes.length === 0 && (
+        {!loading && filteredNotes.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20">
             <span className="text-4xl mb-4">🔐</span>
             <h3
