@@ -22,6 +22,7 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
   const [categoryId, setCategoryId] = useState<string | null>(note?.category_id || null);
   const [toolbarBottom, setToolbarBottom] = useState(16);
   const [activeFormats, setActiveFormats] = useState<Record<string, boolean>>({});
+  const [saving, setSaving] = useState(false);
   const editorRef = useRef<HTMLDivElement>(null);
   const initializedRef = useRef(false);
 
@@ -88,12 +89,14 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
     return editorRef.current?.innerHTML || '';
   }, []);
 
-  const handleSave = () => {
-    if (!title.trim()) return;
+  const handleSave = async () => {
+    if (!title.trim() || saving) return;
+    setSaving(true);
     const validCategoryId = categoryId && categories.some((c) => c.id === categoryId)
       ? categoryId
       : null;
-    onSave(title.trim(), getBodyContent(), validCategoryId);
+    await onSave(title.trim(), getBodyContent(), validCategoryId);
+    setSaving(false);
   };
 
   const execCommand = useCallback((command: string, value?: string) => {
@@ -301,18 +304,20 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
         </span>
         <button
           onClick={handleSave}
+          disabled={saving || !title.trim()}
           className="text-sm font-bold px-4 py-1.5 rounded-lg transition-all"
           style={{
-            backgroundColor: title.trim()
+            backgroundColor: title.trim() && !saving
               ? (isDark ? 'rgba(224,225,221,0.15)' : 'rgba(27,38,59,0.1)')
               : (isDark ? 'rgba(224,225,221,0.06)' : 'rgba(27,38,59,0.04)'),
-            color: title.trim() ? primaryText : tertiaryText,
+            color: title.trim() && !saving ? primaryText : tertiaryText,
+            opacity: saving ? 0.6 : 1,
             fontFamily: "'Plus Jakarta Sans', sans-serif",
             border: 'none',
             cursor: 'pointer',
           }}
         >
-          Save
+          {saving ? 'Saving...' : 'Save'}
         </button>
       </div>
 
