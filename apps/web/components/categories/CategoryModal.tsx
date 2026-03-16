@@ -5,6 +5,18 @@ import { useAppStore } from '@/store';
 import Modal from '@/components/common/Modal';
 import { CATEGORY_ICONS, CATEGORY_COLORS, MAX_CATEGORY_NAME_LENGTH } from '@safeink/shared';
 import type { Category } from '@safeink/shared';
+import {
+  Folder, Briefcase, Home, Rocket, BookOpen, Lightbulb, Target, Microscope, Plane, Palette,
+  Music, Wallet, Dumbbell, CookingPot, Camera, Globe, Star, Wrench, BarChart3, FlaskConical,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  folder: Folder, briefcase: Briefcase, home: Home, rocket: Rocket, 'book-open': BookOpen,
+  lightbulb: Lightbulb, target: Target, microscope: Microscope, plane: Plane, palette: Palette,
+  music: Music, wallet: Wallet, dumbbell: Dumbbell, 'cooking-pot': CookingPot, camera: Camera,
+  globe: Globe, star: Star, wrench: Wrench, 'bar-chart-3': BarChart3, 'flask-conical': FlaskConical,
+};
 
 interface CategoryModalProps {
   isOpen: boolean;
@@ -59,7 +71,7 @@ export default function CategoryModal({ isOpen, onClose, category, parentCategor
             fontFamily: "'Plus Jakarta Sans', sans-serif",
           }}
         >
-          Inside: <strong style={{ color: parentCategory.color }}>{parentCategory.icon} {parentCategory.name}</strong>
+          Inside: <strong style={{ color: parentCategory.color }}>{ICON_MAP[parentCategory.icon] ? (() => { const I = ICON_MAP[parentCategory.icon]; return <I size={14} strokeWidth={1.5} style={{ color: parentCategory.color, display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />; })() : parentCategory.icon} {parentCategory.name}</strong>
         </div>
       )}
 
@@ -98,21 +110,25 @@ export default function CategoryModal({ isOpen, onClose, category, parentCategor
           Icon
         </label>
         <div className="grid grid-cols-10 gap-2">
-          {CATEGORY_ICONS.map((emoji) => (
-            <button
-              key={emoji}
-              onClick={() => setIcon(emoji)}
-              className="flex items-center justify-center text-lg rounded-xl transition-all"
-              style={{
-                width: 40,
-                height: 40,
-                backgroundColor: icon === emoji ? `${accent}20` : 'transparent',
-                border: `2px solid ${icon === emoji ? accent : 'transparent'}`,
-              }}
-            >
-              {emoji}
-            </button>
-          ))}
+          {CATEGORY_ICONS.map((iconName) => {
+            const IconComp = ICON_MAP[iconName];
+            if (!IconComp) return null;
+            return (
+              <button
+                key={iconName}
+                onClick={() => setIcon(iconName)}
+                className="flex items-center justify-center rounded-xl transition-all"
+                style={{
+                  width: 40,
+                  height: 40,
+                  backgroundColor: icon === iconName ? `${accent}20` : 'transparent',
+                  border: `2px solid ${icon === iconName ? accent : 'transparent'}`,
+                }}
+              >
+                <IconComp size={20} strokeWidth={1.5} style={{ color: isDark ? '#e0e1dd' : '#1a1c24' }} />
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -158,10 +174,10 @@ export default function CategoryModal({ isOpen, onClose, category, parentCategor
           }}
         >
           <div
-            className="flex items-center justify-center text-lg"
+            className="flex items-center justify-center"
             style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: `${color}2e` }}
           >
-            {icon}
+            {ICON_MAP[icon] ? (() => { const I = ICON_MAP[icon]; return <I size={20} strokeWidth={1.5} style={{ color }} />; })() : icon}
           </div>
           <span
             className="text-sm font-bold"

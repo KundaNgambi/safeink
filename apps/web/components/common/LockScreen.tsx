@@ -6,6 +6,7 @@ import { useAuthStore } from '@/store/auth';
 import { createClient } from '@/lib/supabase/client';
 import Logo from '@/components/common/Logo';
 import { Lock } from 'lucide-react';
+import { setupEncryptionOnLogin } from '@/lib/services/encryption';
 
 export default function LockScreen() {
   const { theme, setLocked } = useAppStore();
@@ -40,6 +41,8 @@ export default function LockScreen() {
         setError('Incorrect password');
         setPassword('');
       } else {
+        // Re-derive encryption key on unlock
+        await setupEncryptionOnLogin(password);
         setLocked(false);
         setPassword('');
       }

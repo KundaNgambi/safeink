@@ -6,6 +6,7 @@ import { Eye, EyeOff, Check, X } from 'lucide-react';
 import Logo from '@/components/common/Logo';
 import { useAuthStore } from '@/store/auth';
 import { signupSchema } from '@safeink/shared';
+import { setupEncryptionOnSignup } from '@/lib/services/encryption';
 
 export default function SignupPage() {
   const [fullName, setFullName] = useState('');
@@ -50,10 +51,14 @@ export default function SignupPage() {
       }
 
       if (needsEmailConfirmation) {
+        // Store password temporarily so we can derive key after email confirmation
+        sessionStorage.setItem('obscura_pending_pw', password);
         setSuccess('Check your email for a confirmation link.');
         return;
       }
 
+      // Derive encryption key from password and store salt in user metadata
+      await setupEncryptionOnSignup(password);
       router.push('/');
     } catch {
       setError('An unexpected error occurred');

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Logo from '@/components/common/Logo';
 import { useAuthStore } from '@/store/auth';
+import { setupEncryptionOnLogin } from '@/lib/services/encryption';
 
 export default function MFAPage() {
   const [code, setCode] = useState(['', '', '', '', '', '']);
@@ -55,6 +56,13 @@ export default function MFAPage() {
         setCode(['', '', '', '', '', '']);
         inputRefs.current[0]?.focus();
         return;
+      }
+
+      // Derive encryption key from the password stored during login
+      const pendingPw = sessionStorage.getItem('obscura_pending_pw');
+      if (pendingPw) {
+        await setupEncryptionOnLogin(pendingPw);
+        sessionStorage.removeItem('obscura_pending_pw');
       }
 
       router.push('/');

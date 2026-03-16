@@ -79,8 +79,8 @@ export interface Share {
 export type UserRole = 'owner' | 'admin' | 'editor' | 'viewer' | 'guest';
 
 export const CATEGORY_ICONS = [
-  '📁', '💼', '🏠', '🚀', '📚', '💡', '🎯', '🔬', '✈️', '🎨',
-  '🎵', '💰', '🏋️', '🍳', '📸', '🌍', '⭐', '🔧', '📊', '🧪',
+  'folder', 'briefcase', 'home', 'rocket', 'book-open', 'lightbulb', 'target', 'microscope', 'plane', 'palette',
+  'music', 'wallet', 'dumbbell', 'cooking-pot', 'camera', 'globe', 'star', 'wrench', 'bar-chart-3', 'flask-conical',
 ] as const;
 
 export const CATEGORY_COLORS = [

@@ -15,6 +15,7 @@
     "build:web": "turbo run build --filter=web"
   },
   "devDependencies": {
+    "sharp": "^0.34.5",
     "turbo": "^2.0.0",
     "typescript": "^5.4.0"
   },

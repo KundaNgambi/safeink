@@ -6,6 +6,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import Logo from '@/components/common/Logo';
 import { useAuthStore } from '@/store/auth';
 import { signinSchema } from '@safeink/shared';
+import { setupEncryptionOnLogin } from '@/lib/services/encryption';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -38,10 +39,14 @@ export default function LoginPage() {
       }
 
       if (mfaRequired) {
+        // Store password temporarily for key derivation after MFA
+        sessionStorage.setItem('obscura_pending_pw', password);
         router.push('/mfa');
         return;
       }
 
+      // Derive encryption key from password
+      await setupEncryptionOnLogin(password);
       router.push('/');
     } catch {
       setError('An unexpected error occurred');

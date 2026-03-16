@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAppStore } from '@/store';
 import {
   Bold, Italic, Underline, Strikethrough,
@@ -21,6 +21,25 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
   const [title, setTitle] = useState(note?.title || '');
   const [body, setBody] = useState(note?.body || '');
   const [categoryId, setCategoryId] = useState<string | null>(note?.category_id || null);
+  const [toolbarBottom, setToolbarBottom] = useState(16);
+
+  // Track virtual keyboard via visualViewport API
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+
+    const onResize = () => {
+      const offset = window.innerHeight - vv.height - vv.offsetTop;
+      setToolbarBottom(offset > 0 ? offset + 12 : 16);
+    };
+
+    vv.addEventListener('resize', onResize);
+    vv.addEventListener('scroll', onResize);
+    return () => {
+      vv.removeEventListener('resize', onResize);
+      vv.removeEventListener('scroll', onResize);
+    };
+  }, []);
 
   useEffect(() => {
     if (note) {
@@ -160,6 +179,10 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
             color: title ? primaryText : tertiaryText,
           }}
           autoFocus
+          autoComplete="off"
+          autoCorrect="off"
+          data-form-type="other"
+          data-lpignore="true"
         />
         <textarea
           value={body}
@@ -173,6 +196,10 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
             lineHeight: 1.8,
             minHeight: 300,
           }}
+          autoComplete="off"
+          autoCorrect="off"
+          data-form-type="other"
+          data-lpignore="true"
         />
       </div>
 
@@ -180,9 +207,10 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
       <div
         className="fixed z-[60] flex items-center"
         style={{
-          bottom: 16,
+          bottom: toolbarBottom,
           left: '50%',
           transform: 'translateX(-50%)',
+          transition: 'bottom 0.15s ease-out',
           height: 42,
           padding: '0 6px',
           borderRadius: 21,

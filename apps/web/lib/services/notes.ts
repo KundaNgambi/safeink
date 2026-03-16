@@ -3,19 +3,16 @@ import { encrypt, decrypt } from '@safeink/shared';
 import type { Note, NoteDecrypted } from '@safeink/shared';
 
 async function getEncryptionKey(): Promise<CryptoKey> {
-  // For now, use a key derived from the user's session.
-  // In production, this should use PBKDF2 with the user's master password.
-  const { generateEncryptionKey, exportKey, importKey } = await import('@safeink/shared');
+  const { importKey } = await import('@safeink/shared');
 
   const stored = sessionStorage.getItem('obscura_enc_key');
-  if (stored) {
-    return importKey(stored);
+  if (!stored) {
+    throw new Error(
+      'Encryption key not found. Please sign out and sign back in to set up encryption.'
+    );
   }
 
-  const key = await generateEncryptionKey();
-  const exported = await exportKey(key);
-  sessionStorage.setItem('obscura_enc_key', exported);
-  return key;
+  return importKey(stored);
 }
 
 async function decryptNote(note: Note): Promise<NoteDecrypted> {
