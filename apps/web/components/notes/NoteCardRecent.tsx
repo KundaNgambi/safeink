@@ -74,7 +74,7 @@ export default function NoteCardRecent({ note, onDelete, onUnlock }: NoteCardRec
           className="text-[11px] truncate mt-0.5"
           style={{ color: secondaryText, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
         >
-          {note.locked ? '••••••••••••••••' : note.body}
+          {note.locked ? '••••••••••••••••' : stripHtml(note.body)}
         </p>
         <div className="flex items-center gap-2 mt-1">
           <span
@@ -135,6 +135,11 @@ export default function NoteCardRecent({ note, onDelete, onUnlock }: NoteCardRec
       </div>
     </div>
   );
+}
+
+function stripHtml(html: string): string {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
 function getTimeAgo(dateStr: string): string {

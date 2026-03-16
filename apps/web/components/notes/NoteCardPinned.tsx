@@ -94,7 +94,7 @@ export default function NoteCardPinned({ note, onDelete, onUnlock }: NoteCardPin
         className="text-[11px] leading-relaxed line-clamp-2"
         style={{ color: secondaryText, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
       >
-        {note.locked ? '••••••••••••••••' : note.body}
+        {note.locked ? '••••••••••••••••' : stripHtml(note.body)}
       </p>
 
       {/* Footer */}
@@ -143,6 +143,11 @@ export default function NoteCardPinned({ note, onDelete, onUnlock }: NoteCardPin
       </div>
     </div>
   );
+}
+
+function stripHtml(html: string): string {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
 function getTimeAgo(dateStr: string): string {
