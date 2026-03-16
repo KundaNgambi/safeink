@@ -58,9 +58,8 @@ export default function AppPage() {
 
   // Initialize demo data
   useEffect(() => {
-    setCategories(DEMO_CATEGORIES);
-    setNotes(DEMO_NOTES);
-    document.body.className = theme;
+    useAppStore.getState().setCategories(DEMO_CATEGORIES);
+    useAppStore.getState().setNotes(DEMO_NOTES);
   }, []);
 
   // Sync theme to body
