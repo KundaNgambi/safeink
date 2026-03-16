@@ -11,6 +11,7 @@
 
 *::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
 * { scrollbar-width: none; -ms-overflow-style: none; }
+html, body { height: 100%; }
 html { -webkit-overflow-scrolling: touch; }
 
 body {
