@@ -72,13 +72,18 @@ export async function createNote(title: string, body: string, categoryId: string
   const title_encrypted = await encrypt(title, key);
   const body_encrypted = await encrypt(body, key);
 
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Not authenticated');
+
   const { data, error } = await supabase
     .from('notes')
     .insert({
+      user_id: user.id,
       title_encrypted,
       body_encrypted,
       category_id: categoryId,
       pinned: false,
+      archived: false,
     })
     .select()
     .single();

@@ -24,6 +24,10 @@ export default function CopyButton({ text, size = 'sm' }: CopyButtonProps) {
       navigator.clipboard.writeText(text).catch(() => {});
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      // Clipboard protection: auto-clear after 30 seconds
+      setTimeout(() => {
+        navigator.clipboard.writeText('').catch(() => {});
+      }, 30000);
     },
     [text]
   );

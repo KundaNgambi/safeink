@@ -59,11 +59,11 @@ export default function AppPage() {
         {activeTab === 'settings' && <SettingsScreen />}
       </div>
 
-      {/* Bottom navigation */}
-      <BottomNav />
+      {/* Bottom navigation — hidden when editor is open */}
+      {!showCreateNote && !selectedNoteId && <BottomNav />}
 
-      {/* FAB */}
-      <FAB />
+      {/* FAB — hidden when editor is open */}
+      {!showCreateNote && !selectedNoteId && <FAB />}
 
       {/* Error toast */}
       <Toast />
