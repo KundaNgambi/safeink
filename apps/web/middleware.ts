@@ -36,7 +36,12 @@ export async function middleware(request: NextRequest) {
   const isPublicRoute = PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
   const isStaticOrApi = pathname.startsWith('/api') || pathname.startsWith('/_next');
 
-  if (!isPublicRoute && !isStaticOrApi) {
+  // Skip auth checks if Supabase is not configured (local dev without .env.local)
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const hasSupabase = supabaseUrl && supabaseKey;
+
+  if (hasSupabase && !isPublicRoute && !isStaticOrApi) {
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -73,7 +78,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Redirect authenticated users away from auth pages
-  if (isPublicRoute && pathname !== '/auth/callback') {
+  if (hasSupabase && isPublicRoute && pathname !== '/auth/callback') {
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
