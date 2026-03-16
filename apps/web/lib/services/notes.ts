@@ -16,8 +16,8 @@ async function getEncryptionKey(): Promise<CryptoKey> {
 }
 
 async function decryptNote(note: Note): Promise<NoteDecrypted> {
-  const key = await getEncryptionKey();
   try {
+    const key = await getEncryptionKey();
     return {
       id: note.id,
       user_id: note.user_id,
