@@ -1,0 +1,157 @@
+'use client';
+
+import { useState } from 'react';
+import { useAppStore } from '@/store';
+import { useAuthStore } from '@/store/auth';
+import { createClient } from '@/lib/supabase/client';
+import Logo from '@/components/common/Logo';
+import { Lock } from 'lucide-react';
+
+export default function LockScreen() {
+  const { theme, setLocked } = useAppStore();
+  const { user, signOut } = useAuthStore();
+  const isDark = theme === 'dark';
+
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const primaryText = isDark ? '#E0E1DD' : '#1B263B';
+  const secondaryText = isDark ? 'rgba(224,225,221,0.6)' : 'rgba(27,38,59,0.6)';
+  const tertiaryText = isDark ? 'rgba(224,225,221,0.35)' : 'rgba(27,38,59,0.35)';
+  const borderColor = isDark ? 'rgba(224,225,221,0.12)' : 'rgba(27,38,59,0.12)';
+  const bgColor = isDark ? '#1B263B' : '#E0E1DD';
+  const inputBg = isDark ? 'rgba(224,225,221,0.06)' : 'rgba(27,38,59,0.04)';
+
+  const handleUnlock = async () => {
+    if (!password.trim() || !user?.email) return;
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const supabase = createClient();
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password,
+      });
+
+      if (authError) {
+        setError('Incorrect password');
+        setPassword('');
+      } else {
+        setLocked(false);
+        setPassword('');
+      }
+    } catch {
+      setError('Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignOut = () => {
+    signOut().then(() => {
+      setLocked(false);
+      window.location.href = '/welcome';
+    });
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center px-8"
+      style={{ backgroundColor: bgColor }}
+    >
+      {/* Logo */}
+      <div className="mb-6">
+        <Logo size={56} />
+      </div>
+
+      {/* Lock icon */}
+      <div
+        className="flex items-center justify-center mb-4"
+        style={{
+          width: 48,
+          height: 48,
+          borderRadius: '50%',
+          border: `1.5px solid ${borderColor}`,
+        }}
+      >
+        <Lock size={22} strokeWidth={1.5} style={{ color: primaryText }} />
+      </div>
+
+      {/* Title */}
+      <h2
+        className="text-lg font-bold mb-1"
+        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: primaryText }}
+      >
+        Locked
+      </h2>
+      <p
+        className="text-xs mb-6 text-center"
+        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: secondaryText }}
+      >
+        Enter your password to unlock
+      </p>
+
+      {/* Password input */}
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && handleUnlock()}
+        placeholder="Password"
+        className="w-full max-w-[280px] px-4 py-3 rounded-xl text-sm outline-none mb-3"
+        style={{
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
+          backgroundColor: inputBg,
+          border: `1.5px solid ${error ? '#C45C6A' : borderColor}`,
+          color: primaryText,
+        }}
+        autoFocus
+      />
+
+      {/* Error message */}
+      {error && (
+        <p
+          className="text-xs mb-3"
+          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: '#C45C6A' }}
+        >
+          {error}
+        </p>
+      )}
+
+      {/* Unlock button */}
+      <button
+        onClick={handleUnlock}
+        disabled={loading || !password.trim()}
+        className="w-full max-w-[280px] py-3 rounded-xl text-sm font-bold transition-all mb-4"
+        style={{
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
+          backgroundColor: password.trim() ? primaryText : (isDark ? 'rgba(224,225,221,0.06)' : 'rgba(27,38,59,0.04)'),
+          color: password.trim() ? bgColor : tertiaryText,
+          border: 'none',
+          cursor: password.trim() ? 'pointer' : 'default',
+          opacity: loading ? 0.6 : 1,
+        }}
+      >
+        {loading ? 'Unlocking...' : 'Unlock'}
+      </button>
+
+      {/* Sign out link */}
+      <button
+        onClick={handleSignOut}
+        className="text-xs font-medium"
+        style={{
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
+          color: secondaryText,
+          background: 'transparent',
+          border: 'none',
+          cursor: 'pointer',
+        }}
+      >
+        Sign out instead
+      </button>
+    </div>
+  );
+}

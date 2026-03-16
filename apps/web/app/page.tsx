@@ -10,6 +10,8 @@ import NoteEditor from '@/components/notes/NoteEditor';
 import CategoriesScreen from '@/components/categories/CategoriesScreen';
 import SettingsScreen from '@/components/settings/SettingsScreen';
 import Toast from '@/components/common/Toast';
+import AutoLockProvider from '@/components/providers/AutoLock';
+import LockScreen from '@/components/common/LockScreen';
 
 export default function AppPage() {
   const {
@@ -18,6 +20,7 @@ export default function AppPage() {
     selectedNoteId, setSelectedNoteId,
     notes, loadNotes, loadCategories,
     createNoteAsync, updateNoteAsync,
+    isLocked,
   } = useAppStore();
   const user = useAuthStore((s) => s.user);
 
@@ -48,37 +51,42 @@ export default function AppPage() {
   };
 
   return (
-    <div
-      className="h-screen w-screen overflow-hidden flex flex-col"
-      style={{ backgroundColor: isDark ? '#1B263B' : '#E0E1DD' }}
-    >
-      {/* Main content */}
-      <div className="flex-1 overflow-hidden">
-        {activeTab === 'notes' && <NotesScreen />}
-        {activeTab === 'categories' && <CategoriesScreen />}
-        {activeTab === 'settings' && <SettingsScreen />}
+    <AutoLockProvider>
+      <div
+        className="h-screen w-screen overflow-hidden flex flex-col"
+        style={{ backgroundColor: isDark ? '#1B263B' : '#E0E1DD' }}
+      >
+        {/* Lock screen overlay */}
+        {isLocked && <LockScreen />}
+
+        {/* Main content */}
+        <div className="flex-1 overflow-hidden">
+          {activeTab === 'notes' && <NotesScreen />}
+          {activeTab === 'categories' && <CategoriesScreen />}
+          {activeTab === 'settings' && <SettingsScreen />}
+        </div>
+
+        {/* Bottom navigation — hidden when editor is open */}
+        {!showCreateNote && !selectedNoteId && <BottomNav />}
+
+        {/* FAB — hidden when editor is open */}
+        {!showCreateNote && !selectedNoteId && <FAB />}
+
+        {/* Error toast */}
+        <Toast />
+
+        {/* Note editor overlay */}
+        {(showCreateNote || selectedNoteId) && (
+          <NoteEditor
+            note={selectedNote}
+            onSave={handleSaveNote}
+            onClose={() => {
+              setShowCreateNote(false);
+              setSelectedNoteId(null);
+            }}
+          />
+        )}
       </div>
-
-      {/* Bottom navigation — hidden when editor is open */}
-      {!showCreateNote && !selectedNoteId && <BottomNav />}
-
-      {/* FAB — hidden when editor is open */}
-      {!showCreateNote && !selectedNoteId && <FAB />}
-
-      {/* Error toast */}
-      <Toast />
-
-      {/* Note editor overlay */}
-      {(showCreateNote || selectedNoteId) && (
-        <NoteEditor
-          note={selectedNote}
-          onSave={handleSaveNote}
-          onClose={() => {
-            setShowCreateNote(false);
-            setSelectedNoteId(null);
-          }}
-        />
-      )}
-    </div>
+    </AutoLockProvider>
   );
 }

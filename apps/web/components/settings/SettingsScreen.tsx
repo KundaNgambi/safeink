@@ -1,17 +1,44 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useAppStore } from '@/store';
 import { useAuthStore } from '@/store/auth';
 import Logo from '@/components/common/Logo';
 import {
   User, Moon, Shield, Search, LayoutGrid, ChevronRight,
-  Lock, ShieldCheck, Fingerprint, ClipboardCopy, Timer,
+  Lock, ShieldCheck, ClipboardCopy, Timer,
 } from 'lucide-react';
 
+interface SecurityFeature {
+  icon: typeof Lock;
+  title: string;
+  status: string;
+  active: boolean;
+  weight: number;
+}
+
 export default function SettingsScreen() {
-  const { theme, toggleTheme } = useAppStore();
-  const { user, signOut } = useAuthStore();
+  const { theme, toggleTheme, autoLockEnabled, setAutoLockEnabled, autoLockTimeout, setAutoLockTimeout } = useAppStore();
+  const { user, signOut, getMfaFactors } = useAuthStore();
   const isDark = theme === 'dark';
+
+  const [mfaEnabled, setMfaEnabled] = useState(false);
+  const [mfaChecked, setMfaChecked] = useState(false);
+
+  // Check MFA status dynamically
+  useEffect(() => {
+    const checkMfa = async () => {
+      try {
+        const factors = await getMfaFactors();
+        const hasVerified = factors.totp.some((f) => f.status === 'verified');
+        setMfaEnabled(hasVerified);
+      } catch {
+        setMfaEnabled(false);
+      }
+      setMfaChecked(true);
+    };
+    checkMfa();
+  }, [getMfaFactors]);
 
   const primaryText = isDark ? '#E0E1DD' : '#1B263B';
   const secondaryText = isDark ? 'rgba(224,225,221,0.6)' : 'rgba(27,38,59,0.6)';
@@ -20,6 +47,7 @@ export default function SettingsScreen() {
   const cardBg = isDark ? '#243447' : '#FFFFFF';
   const cardBorder = isDark ? 'rgba(224,225,221,0.1)' : 'rgba(27,38,59,0.1)';
   const activeBg = isDark ? 'rgba(224,225,221,0.1)' : 'rgba(27,38,59,0.08)';
+  const inactiveBg = isDark ? 'rgba(196,92,106,0.12)' : 'rgba(196,92,106,0.08)';
 
   const settingsItems = [
     { icon: Moon, label: 'Appearance', onClick: toggleTheme },
@@ -28,17 +56,68 @@ export default function SettingsScreen() {
     { icon: LayoutGrid, label: 'Connected Devices' },
   ];
 
-  const securityFeatures = [
-    { icon: Lock, title: 'End-to-End Encryption', status: 'Active' },
-    { icon: ShieldCheck, title: 'Two-Factor Auth', status: 'Enabled' },
-    { icon: Shield, title: 'Row-Level Security', status: 'Active' },
-    { icon: Fingerprint, title: 'Biometric Unlock', status: 'Active' },
-    { icon: ClipboardCopy, title: 'Clipboard Protection', status: 'Active' },
-    { icon: Timer, title: 'Auto-Lock', status: '5 min' },
+  // Build security features dynamically based on actual implementation status
+  const securityFeatures: SecurityFeature[] = [
+    {
+      icon: Lock,
+      title: 'End-to-End Encryption',
+      status: 'Active',
+      active: true, // Always active — AES-256-GCM implemented in shared/crypto
+      weight: 25,
+    },
+    {
+      icon: ShieldCheck,
+      title: 'Two-Factor Auth',
+      status: mfaChecked ? (mfaEnabled ? 'Enabled' : 'Not Set Up') : 'Checking...',
+      active: mfaEnabled,
+      weight: 25,
+    },
+    {
+      icon: Shield,
+      title: 'Row-Level Security',
+      status: 'Active',
+      active: true, // Always active — enforced at database level
+      weight: 20,
+    },
+    {
+      icon: ClipboardCopy,
+      title: 'Clipboard Protection',
+      status: 'Active',
+      active: true, // Always active — 30s auto-clear in CopyButton
+      weight: 15,
+    },
+    {
+      icon: Timer,
+      title: 'Auto-Lock',
+      status: autoLockEnabled ? `${autoLockTimeout} min` : 'Disabled',
+      active: autoLockEnabled,
+      weight: 15,
+    },
   ];
 
-  // All features active = 100/100
-  const securityScore = 100;
+  // Calculate score dynamically
+  const securityScore = securityFeatures.reduce(
+    (score, feat) => score + (feat.active ? feat.weight : 0),
+    0
+  );
+
+  const scoreLabel =
+    securityScore === 100
+      ? 'Perfect — All security features active'
+      : securityScore >= 75
+        ? 'Good — Some features can be improved'
+        : 'Needs attention — Enable more features';
+
+  const handleAutoLockToggle = () => {
+    setAutoLockEnabled(!autoLockEnabled);
+  };
+
+  const cycleAutoLockTimeout = () => {
+    const options = [1, 2, 5, 10, 15];
+    const currentIndex = options.indexOf(autoLockTimeout);
+    const nextIndex = (currentIndex + 1) % options.length;
+    setAutoLockTimeout(options[nextIndex]!);
+  };
 
   return (
     <div className="flex flex-col h-full overflow-auto pb-24">
@@ -163,13 +242,14 @@ export default function SettingsScreen() {
             className="text-xs font-medium"
             style={{ color: secondaryText, fontFamily: "'Plus Jakarta Sans', sans-serif", margin: 0 }}
           >
-            Perfect — All security features active
+            {scoreLabel}
           </p>
         </div>
 
         {/* Security features list */}
         {securityFeatures.map((feat) => {
           const Icon = feat.icon;
+          const isAutoLock = feat.title === 'Auto-Lock';
           return (
             <div
               key={feat.title}
@@ -177,7 +257,9 @@ export default function SettingsScreen() {
               style={{
                 backgroundColor: cardBg,
                 border: `1px solid ${cardBorder}`,
+                cursor: isAutoLock ? 'pointer' : 'default',
               }}
+              onClick={isAutoLock ? handleAutoLockToggle : undefined}
             >
               <Icon size={18} strokeWidth={1.5} style={{ color: primaryText, flexShrink: 0 }} />
               <span
@@ -186,11 +268,29 @@ export default function SettingsScreen() {
               >
                 {feat.title}
               </span>
+              {isAutoLock && feat.active && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    cycleAutoLockTimeout();
+                  }}
+                  className="text-[10px] font-semibold px-2 py-0.5 rounded-md mr-1"
+                  style={{
+                    backgroundColor: 'transparent',
+                    color: secondaryText,
+                    border: `1px solid ${borderColor}`,
+                    fontFamily: "'JetBrains Mono', monospace",
+                    cursor: 'pointer',
+                  }}
+                >
+                  {autoLockTimeout}m
+                </button>
+              )}
               <span
                 className="text-[10px] font-semibold px-2.5 py-1 rounded-md"
                 style={{
-                  backgroundColor: activeBg,
-                  color: primaryText,
+                  backgroundColor: feat.active ? activeBg : inactiveBg,
+                  color: feat.active ? primaryText : '#C45C6A',
                   fontFamily: "'JetBrains Mono', monospace",
                 }}
               >

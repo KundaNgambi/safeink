@@ -63,6 +63,14 @@ interface AppState {
   // Search
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+
+  // Auto-lock
+  isLocked: boolean;
+  setLocked: (locked: boolean) => void;
+  autoLockEnabled: boolean;
+  setAutoLockEnabled: (enabled: boolean) => void;
+  autoLockTimeout: number; // in minutes
+  setAutoLockTimeout: (minutes: number) => void;
 }
 
 export const useAppStore = create<AppState>((set, get) => ({
@@ -226,4 +234,18 @@ export const useAppStore = create<AppState>((set, get) => ({
   // Search
   searchQuery: '',
   setSearchQuery: (query) => set({ searchQuery: query }),
+
+  // Auto-lock
+  isLocked: false,
+  setLocked: (locked) => set({ isLocked: locked }),
+  autoLockEnabled: typeof window !== 'undefined' ? localStorage.getItem('auto_lock_enabled') !== 'false' : true,
+  setAutoLockEnabled: (enabled) => {
+    if (typeof window !== 'undefined') localStorage.setItem('auto_lock_enabled', String(enabled));
+    set({ autoLockEnabled: enabled });
+  },
+  autoLockTimeout: typeof window !== 'undefined' ? parseInt(localStorage.getItem('auto_lock_timeout') || '5', 10) : 5,
+  setAutoLockTimeout: (minutes) => {
+    if (typeof window !== 'undefined') localStorage.setItem('auto_lock_timeout', String(minutes));
+    set({ autoLockTimeout: minutes });
+  },
 }));
