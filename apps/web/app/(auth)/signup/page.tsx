@@ -82,7 +82,7 @@ export default function SignupPage() {
         <form onSubmit={handleSignup} className="space-y-4">
           <InputField label="Full Name" type="text" value={fullName} onChange={setFullName} placeholder="John Doe" />
           <InputField label="Email" type="email" value={email} onChange={setEmail} placeholder="your@email.com" />
-          <InputField label="Password" type="password" value={password} onChange={setPassword} placeholder="Min 12 characters" />
+          <PasswordField label="Password" value={password} onChange={setPassword} placeholder="Min 12 characters" />
 
           {/* Password strength */}
           {password && (
@@ -103,7 +103,7 @@ export default function SignupPage() {
             </div>
           )}
 
-          <InputField label="Confirm Password" type="password" value={confirmPassword} onChange={setConfirmPassword} placeholder="Re-enter password" />
+          <PasswordField label="Confirm Password" value={confirmPassword} onChange={setConfirmPassword} placeholder="Re-enter password" />
 
           {password && confirmPassword && password !== confirmPassword && (
             <p className="text-[10px]" style={{ color: '#E07A8E', fontFamily: 'var(--font-manrope)' }}>
@@ -174,6 +174,59 @@ function InputField({
           fontFamily: 'var(--font-manrope)',
         }}
       />
+    </div>
+  );
+}
+
+function PasswordField({
+  label, value, onChange, placeholder,
+}: {
+  label: string; value: string; onChange: (v: string) => void; placeholder: string;
+}) {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <div>
+      <label
+        className="block text-xs font-semibold mb-2 uppercase tracking-wider"
+        style={{ fontFamily: 'var(--font-manrope)', color: '#778DA9' }}
+      >
+        {label}
+      </label>
+      <div className="relative">
+        <input
+          type={visible ? 'text' : 'password'}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          className="w-full px-4 py-3 pr-12 rounded-xl text-sm bg-transparent outline-none transition-all"
+          style={{
+            border: '1px solid rgba(119,141,169,0.2)',
+            color: '#E0E1DD',
+            fontFamily: 'var(--font-manrope)',
+          }}
+        />
+        <button
+          type="button"
+          onClick={() => setVisible(!visible)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md transition-colors hover:bg-white/5"
+          style={{ color: '#778DA9', fontSize: 14 }}
+          aria-label={visible ? 'Hide password' : 'Show password'}
+        >
+          {visible ? (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+              <line x1="1" y1="1" x2="23" y2="23" />
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          )}
+        </button>
+      </div>
     </div>
   );
 }
