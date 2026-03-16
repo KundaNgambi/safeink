@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAppStore } from '@/store';
 import {
   Bold, Italic, Underline, Strikethrough,
@@ -22,6 +22,69 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
   const [body, setBody] = useState(note?.body || '');
   const [categoryId, setCategoryId] = useState<string | null>(note?.category_id || null);
   const [toolbarBottom, setToolbarBottom] = useState(16);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const applyFormat = useCallback((key: string) => {
+    const ta = textareaRef.current;
+    if (!ta) return;
+
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const selected = body.substring(start, end);
+    let before = body.substring(0, start);
+    let after = body.substring(end);
+    let insert = '';
+    let cursorOffset = 0;
+
+    switch (key) {
+      case 'bold':
+        insert = selected ? `**${selected}**` : '**bold**';
+        cursorOffset = selected ? insert.length : 2;
+        break;
+      case 'italic':
+        insert = selected ? `_${selected}_` : '_italic_';
+        cursorOffset = selected ? insert.length : 1;
+        break;
+      case 'underline':
+        insert = selected ? `<u>${selected}</u>` : '<u>underline</u>';
+        cursorOffset = selected ? insert.length : 3;
+        break;
+      case 'strike':
+        insert = selected ? `~~${selected}~~` : '~~strikethrough~~';
+        cursorOffset = selected ? insert.length : 2;
+        break;
+      case 'checklist': {
+        const lines = selected ? selected.split('\n').map(l => `- [ ] ${l}`).join('\n') : '- [ ] ';
+        insert = lines;
+        cursorOffset = insert.length;
+        break;
+      }
+      case 'code':
+        if (selected.includes('\n')) {
+          insert = `\`\`\`\n${selected}\n\`\`\``;
+        } else {
+          insert = selected ? `\`${selected}\`` : '`code`';
+        }
+        cursorOffset = selected ? insert.length : 1;
+        break;
+      case 'link':
+        insert = selected ? `[${selected}](url)` : '[text](url)';
+        cursorOffset = selected ? insert.length - 4 : 1;
+        break;
+      default:
+        return;
+    }
+
+    const newBody = before + insert + after;
+    setBody(newBody);
+
+    // Restore cursor position
+    requestAnimationFrame(() => {
+      ta.focus();
+      const pos = start + cursorOffset;
+      ta.setSelectionRange(pos, selected ? pos : pos + (selected ? 0 : insert.length - cursorOffset * 2));
+    });
+  }, [body]);
 
   // Track virtual keyboard via visualViewport API
   useEffect(() => {
@@ -189,6 +252,7 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
           data-lpignore="true"
         />
         <textarea
+          ref={textareaRef}
           value={body}
           onChange={(e) => setBody(e.target.value)}
           placeholder="Start writing..."
@@ -243,7 +307,8 @@ export default function NoteEditor({ note, onSave, onClose }: NoteEditorProps) {
           return (
             <button
               key={item.key}
-              className="flex items-center justify-center transition-all"
+              onClick={() => applyFormat(item.key)}
+              className="flex items-center justify-center transition-all active:scale-90"
               style={{
                 width: 34,
                 height: 34,
