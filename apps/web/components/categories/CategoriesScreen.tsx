@@ -12,7 +12,7 @@ export default function CategoriesScreen() {
     showCreateCategory, setShowCreateCategory,
     editingCategory, setEditingCategory,
     deletingCategory, setDeletingCategory,
-    addCategory, updateCategory, deleteCategory,
+    createCategoryAsync, updateCategoryAsync, deleteCategoryAsync,
     setActiveTab, setActiveCategoryFilter,
   } = useAppStore();
   const isDark = theme === 'dark';
@@ -61,39 +61,18 @@ export default function CategoriesScreen() {
     setDragOverId(null);
   }, [dragId, dragOverId, categories, setCategories]);
 
-  const handleCreateCategory = (data: { name: string; icon: string; color: string; parent_id?: string | null }) => {
-    const newCat = {
-      id: crypto.randomUUID(),
-      user_id: 'demo',
-      name: data.name,
-      icon: data.icon,
-      color: data.color,
-      parent_id: data.parent_id || null,
-      sort_order: categories.filter((c) => c.parent_id === (data.parent_id || null)).length,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    };
-    addCategory(newCat);
+  const handleCreateCategory = async (data: { name: string; icon: string; color: string; parent_id?: string | null }) => {
+    await createCategoryAsync(data.name, data.icon, data.color, data.parent_id || null);
   };
 
-  const handleEditCategory = (data: { name: string; icon: string; color: string }) => {
+  const handleEditCategory = async (data: { name: string; icon: string; color: string }) => {
     if (!editingCategory) return;
-    updateCategory(editingCategory.id, data);
+    await updateCategoryAsync(editingCategory.id, data);
     setEditingCategory(null);
   };
 
-  const handleDeleteCategory = (categoryId: string, reassignTo: string | null) => {
-    const { notes, updateNote } = useAppStore.getState();
-    const allDescendantIds = getDescendantIds(categoryId, categories);
-    const affectedIds = [categoryId, ...allDescendantIds];
-
-    notes.forEach((note) => {
-      if (note.category_id && affectedIds.includes(note.category_id)) {
-        updateNote(note.id, { category_id: reassignTo });
-      }
-    });
-
-    affectedIds.forEach((id) => deleteCategory(id));
+  const handleDeleteCategory = async (categoryId: string, reassignTo: string | null) => {
+    await deleteCategoryAsync(categoryId, reassignTo);
   };
 
   const handleCategoryClick = (catId: string) => {
