@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 
 // Public routes that don't require authentication
-const PUBLIC_ROUTES = ['/welcome', '/login', '/signup', '/mfa', '/auth/callback'];
+const PUBLIC_ROUTES = ['/welcome', '/login', '/signup', '/mfa', '/auth/callback', '/forgot-password', '/reset-password'];
 
 // Rate limiting state — best-effort in serverless (resets on cold start).
 // For production, replace with Upstash Redis (@upstash/ratelimit).
@@ -109,7 +109,7 @@ export async function middleware(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (user && pathname !== '/mfa') {
+    if (user && pathname !== '/mfa' && pathname !== '/reset-password') {
       return NextResponse.redirect(new URL('/', request.url));
     }
   }

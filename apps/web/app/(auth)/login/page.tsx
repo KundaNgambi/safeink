@@ -152,6 +152,16 @@ export default function LoginPage() {
             </div>
           </div>
 
+          <div className="flex justify-end">
+            <a
+              href="/forgot-password"
+              className="text-xs font-medium hover:underline"
+              style={{ color: 'rgba(224,225,221,0.6)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              Forgot password?
+            </a>
+          </div>
+
           {error && (
             <p className="text-xs text-center" style={{ color: '#C45C6A', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
               {error}
