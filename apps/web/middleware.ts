@@ -5,8 +5,10 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 // Public routes that don't require authentication
 const PUBLIC_ROUTES = ['/welcome', '/login', '/signup', '/mfa', '/auth/callback'];
 
-// Rate limiting state (in production, use Upstash Redis)
+// Rate limiting state — best-effort in serverless (resets on cold start).
+// For production, replace with Upstash Redis (@upstash/ratelimit).
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const MAX_RATE_LIMIT_ENTRIES = 10000;
 
 const RATE_LIMITS: Record<string, { limit: number; window: number }> = {
   '/api/auth': { limit: 5, window: 60000 },
@@ -128,6 +130,13 @@ export async function middleware(request: NextRequest) {
     const key = `${ip}:${request.nextUrl.pathname}`;
     const { limit, window } = getRateLimit(request.nextUrl.pathname);
     const now = Date.now();
+
+    // Evict expired entries to prevent memory leaks
+    if (rateLimitMap.size > MAX_RATE_LIMIT_ENTRIES) {
+      for (const [k, v] of rateLimitMap) {
+        if (now > v.resetTime) rateLimitMap.delete(k);
+      }
+    }
 
     const entry = rateLimitMap.get(key);
     if (!entry || now > entry.resetTime) {

@@ -19,15 +19,37 @@ export default function CopyButton({ text, size = 'sm' }: CopyButtonProps) {
   const border = isDark ? 'rgba(224,225,221,0.12)' : 'rgba(27,38,59,0.12)';
 
   const handleCopy = useCallback(
-    (e: React.MouseEvent) => {
+    async (e: React.MouseEvent) => {
       e.stopPropagation();
-      navigator.clipboard.writeText(text).catch(() => {});
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-      // Clipboard protection: auto-clear after 30 seconds
-      setTimeout(() => {
-        navigator.clipboard.writeText('').catch(() => {});
-      }, 30000);
+      try {
+        await navigator.clipboard.writeText(text);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+        // Clipboard protection: auto-clear after 30 seconds
+        setTimeout(async () => {
+          try {
+            // Only clear if clipboard still contains our text
+            const current = await navigator.clipboard.readText();
+            if (current === text) {
+              await navigator.clipboard.writeText('');
+            }
+          } catch {
+            // Clipboard read/write permission denied — nothing we can do
+          }
+        }, 30000);
+      } catch {
+        // Fallback for browsers that don't support clipboard API
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
     },
     [text]
   );

@@ -68,19 +68,14 @@ export async function updateCategory(
 export async function deleteCategory(id: string, reassignTo: string | null): Promise<void> {
   const supabase = createClient();
 
-  // Reassign notes if needed
-  if (reassignTo) {
-    await supabase
-      .from('notes')
-      .update({ category_id: reassignTo })
-      .eq('category_id', id);
-  } else {
-    // Set notes' category to null
-    await supabase
-      .from('notes')
-      .update({ category_id: null })
-      .eq('category_id', id);
-  }
+  // Reassign notes first — fail early if this doesn't work
+  const newCategoryId = reassignTo || null;
+  const { error: reassignError } = await supabase
+    .from('notes')
+    .update({ category_id: newCategoryId })
+    .eq('category_id', id);
+
+  if (reassignError) throw new Error(`Failed to reassign notes: ${reassignError.message}`);
 
   // Delete category (cascades to children)
   const { error } = await supabase
@@ -88,7 +83,7 @@ export async function deleteCategory(id: string, reassignTo: string | null): Pro
     .delete()
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) throw new Error(`Notes were reassigned but category deletion failed: ${error.message}`);
 }
 
 export async function reorderCategories(items: Array<{ id: string; sort_order: number }>): Promise<void> {
