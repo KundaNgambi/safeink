@@ -45,7 +45,7 @@ export async function deriveKey(
     },
     keyMaterial,
     { name: ALGORITHM, length: KEY_LENGTH },
-    false,
+    true,
     ['encrypt', 'decrypt']
   );
 }

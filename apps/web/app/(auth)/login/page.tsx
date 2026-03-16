@@ -48,8 +48,9 @@ export default function LoginPage() {
       // Derive encryption key from password
       await setupEncryptionOnLogin(password);
       router.push('/');
-    } catch {
-      setError('An unexpected error occurred');
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('An unexpected error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
